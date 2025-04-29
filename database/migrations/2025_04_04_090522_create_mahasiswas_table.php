@@ -18,10 +18,10 @@ class CreateMahasiswasTable extends Migration
             $table->string('nama', 35);
             $table->char('nim', 8)->unique();
             $table->string('jurusan', 35);
-            $table->tinyInteger('gender');
+            $table->enum('gender', ['Laki-laki', 'Perempuan']);
             $table->string('angkatan', 25);
             $table->integer('syarat_lpk');
-            $table->string('email', 25)->unique();
+            $table->string('email', 50)->unique();
             $table->string('password', 255);
             $table->timestamps();
         });
