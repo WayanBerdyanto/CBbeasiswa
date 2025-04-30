@@ -18,6 +18,12 @@
             </a>
         </li>
         <li class="nav-item mb-2">
+            <a href="{{ route('admin.syarat.index') }}" class="nav-link {{ Request::is('admin/syarat') ? 'active' : '' }}">
+                <i class="fas fa-check-circle me-2"></i> Syarat
+            </a>
+        </li>
+
+        <li class="nav-item mb-2">
             <a href="{{ route('admin.pengajuan.index') }}" class="nav-link {{ Request::is('admin/pengajuan') ? 'active' : '' }}">
                 <i class="fas fa-bullhorn me-2"></i> Daftar Pengajuan
             </a>

@@ -15,7 +15,7 @@ class Syarat extends Model
 
     public function beasiswa()
     {
-        return $this->belongsTo(Beasiswa::class, 'id_beasiswa');
+        return $this->belongsTo(Beasiswa::class, 'id_beasiswa', 'id_beasiswa');
     }
 }
 

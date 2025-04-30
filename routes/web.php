@@ -109,6 +109,7 @@ Route::middleware(['auth:admin'])->group(function () {
         // Reporting
         Route::get('laporan', [AdminLaporanController::class, 'index'])->name('laporan.index');
         Route::get('laporan/export', [AdminLaporanController::class, 'export'])->name('laporan.export');
+        
     });
 
 

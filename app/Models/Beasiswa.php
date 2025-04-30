@@ -15,7 +15,7 @@ class Beasiswa extends Model
 
     public function syarat()
     {
-        return $this->hasMany(Syarat::class, 'id_beasiswa');
+        return $this->hasMany(Syarat::class, 'id_beasiswa', 'id_beasiswa');
     }
 
     public function pengajuan()
