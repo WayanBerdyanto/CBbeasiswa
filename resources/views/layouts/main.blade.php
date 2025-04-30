@@ -229,7 +229,7 @@
     <!-- BODY -->
     <div class="container-fluid d-flex flex-grow-1">
         <!-- MENU -->
-        @include('layouts.nav')
+        @include('admin.layouts.nav')
 
 
         <!-- CONTENT -->
@@ -247,7 +247,47 @@
         </p>
     </footer>
 
+    {{-- Sweet Alert --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
+
+    @php
+        $success = session('success');
+        $error = session('error');
+    @endphp
+
+    @if ($success)
+        <script>
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+            Toast.fire({
+                icon: "success",
+                title: "{{ $success }}"
+            });
+        </script>
+    @endif
+
+    @if ($error)
+        <script>
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+        </script>
+    @endif
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

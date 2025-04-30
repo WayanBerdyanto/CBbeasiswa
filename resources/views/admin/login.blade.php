@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - CBScholarships</title>
+    <title>Admin Login - CBScholarships</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
@@ -263,18 +263,19 @@
             <div class="logo-text">CBScholarships</div>
         </div>
 
-        <form action="{{ route('login') }}" method="POST">
+        <form action="{{ route('admin.login') }}" method="POST">
+            <h3 class="text-center mb-4">Admin Login</h3>
             @csrf <!-- Tambahkan CSRF token agar Laravel menerima request -->
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" class="form-control"
+                <input type="email" id="email" name="email" class="form-control text-white"
                     placeholder="Masukkan email Anda" required>
                 <i class="fas fa-envelope input-icon"></i>
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="form-control"
+                <input type="password" id="password" name="password" class="form-control text-white"
                     placeholder="Masukkan password Anda" required>
                 <i class="fas fa-lock input-icon"></i>
             </div>
@@ -283,11 +284,7 @@
         </form>
 
         <div class="login-footer">
-            Belum punya akun? <a href="/regis">Daftar disini</a>
-        </div>
-
-        <div class="login-footer">
-            <a href="/admin/login">Login sebagai Admin</a>
+            <a href="/login">Login sebagai Mahasiswa</a>
         </div>
     </div>
 

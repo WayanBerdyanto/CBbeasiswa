@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Mahasiswa;
 
 class AuthController extends Controller
 {
@@ -20,19 +20,67 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (Auth::guard('mahasiswa')->attempt($credentials)) {
-            return redirect()->intended('/home');
-        }
+        try {
+            if (Auth::guard('mahasiswa')->attempt($credentials)) {
+                return redirect()->intended('/home')->with('success', 'Login berhasil!');
+            }
 
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
+            return back()->with('error', 'Email atau password salah.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat login: ' . $e->getMessage());
+        }
+    }
+
+    // Menampilkan form registrasi
+    public function showRegisForm()
+    {
+        // Mengarahkan ke resources/views/auth/regis.blade.php
+        return view('auth.regis');
+    }
+
+    // Proses registrasi
+    public function register(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:35',
+            'nim' => 'required|string|size:8|unique:mahasiswa',
+            'jurusan' => 'required|string|max:35',
+            'gender' => 'required|numeric',
+            'angkatan' => 'required|string|max:25',
+            'syarat_lpk' => 'required|numeric',
+            'email' => 'required|email|max:25|unique:mahasiswa',
+            'password' => 'required|min:6|confirmed',
         ]);
+
+        try {
+            $mahasiswa = Mahasiswa::create([
+                'nama' => $request->nama,
+                'nim' => $request->nim,
+                'jurusan' => $request->jurusan,
+                'gender' => $request->gender,
+                'angkatan' => $request->angkatan,
+                'syarat_lpk' => $request->syarat_lpk,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+            ]);
+
+            auth()->login($mahasiswa);
+            
+            return redirect()->intended('/home')->with('success', 'Registrasi berhasil!');
+        } catch (\Exception $e) {
+            return back()->withInput()
+                ->with('error', 'Terjadi kesalahan saat mendaftar: ' . $e->getMessage());
+        }
     }
 
     // Proses logout
     public function logout(Request $request)
     {
-        Auth::guard('mahasiswa')->logout();
-        return redirect('/login');
+        try {
+            Auth::guard('mahasiswa')->logout();
+            return redirect('/login')->with('success', 'Logout berhasil!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat logout: ' . $e->getMessage());
+        }
     }
 }

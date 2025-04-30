@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminBeasiswaController;
+use App\Http\Controllers\Admin\AdminSyaratBeasiswaController;
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AuthController;
@@ -9,7 +13,8 @@ use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\SyaratController;
 use App\Http\Controllers\PengajuanController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\Admin\AdminPengajuanController;
+use App\Http\Controllers\Admin\AdminLaporanController;
 
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile')->middleware('auth');
@@ -45,8 +50,8 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/regis', [LoginController::class, 'showRegisForm'])->name('regis');
-Route::post('/regis', [LoginController::class, 'register']);
+Route::get('/regis', [AuthController::class, 'showRegisForm'])->name('regis');
+Route::post('/regis', [AuthController::class, 'register']);
 
 // ------------------- HOME (SETELAH LOGIN) -------------------
 Route::middleware('auth')->group(function () {
@@ -56,4 +61,57 @@ Route::middleware('auth')->group(function () {
 // ------------------- DEFAULT -------------------
 Route::get('/', function () {
     return view('welcome');
+});
+
+// admin login
+Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminController::class, 'login']);
+
+// admin dashboard
+Route::middleware(['auth:admin'])->group(function () {
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+    Route::prefix('admin')->name('admin.')->group(function () {
+        // Beasiswa management
+        Route::resource('beasiswa', AdminBeasiswaController::class);
+
+        // Syarat management
+        Route::resource('syarat', AdminSyaratBeasiswaController::class);
+
+        // Pengajuan filter (pindahkan ke atas route dengan parameter dinamis)
+        Route::get('pengajuan/filter', [AdminPengajuanController::class, 'filter'])->name('pengajuan.filter');
+
+        // Pengajuan management
+        Route::get('pengajuan', [AdminPengajuanController::class, 'index'])->name('pengajuan.index');
+
+        // Penting: Route "create" harus sebelum route dengan parameter dinamis {id}
+        // Pengajuan create
+        Route::get('pengajuan/create', [AdminPengajuanController::class, 'create'])->name('pengajuan.create');
+
+        // Pengajuan edit (pindahkan di atas route detail)
+        Route::get('pengajuan/edit/{id}', [AdminPengajuanController::class, 'edit'])->name('pengajuan.edit');
+
+        // Pengajuan detail - pindahkan setelah semua route spesifik
+        Route::get('pengajuan/{id}', [AdminPengajuanController::class, 'show'])->name('pengajuan.show');
+
+        // Pengajuan store
+        Route::post('pengajuan', [AdminPengajuanController::class, 'store'])->name('pengajuan.store');
+
+        // Pengajuan update
+        Route::put('pengajuan/update/{id}', [AdminPengajuanController::class, 'update'])->name('pengajuan.update');
+
+        // Update status pengajuan
+        Route::patch('pengajuan/status/{id}', [AdminPengajuanController::class, 'updateStatus'])->name('pengajuan.status');
+
+        // Pengajuan destroy
+        Route::delete('pengajuan/{id}', [AdminPengajuanController::class, 'destroy'])->name('pengajuan.destroy');
+
+        // Reporting
+        Route::get('laporan', [AdminLaporanController::class, 'index'])->name('laporan.index');
+        Route::get('laporan/export', [AdminLaporanController::class, 'export'])->name('laporan.export');
+    });
+
+
+    // admin logout
+    Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 });

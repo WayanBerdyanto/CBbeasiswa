@@ -32,6 +32,6 @@ class Pengajuan extends Model
     // Relasi ke tabel mahasiswa
     public function mahasiswa()
     {
-        return $this->belongsTo(Mahasiswa::class, 'id_mahasiswa', 'id_mahasiswa');
+        return $this->belongsTo(Mahasiswa::class, 'id_mahasiswa', 'id');
     }
 }

@@ -1,0 +1,320 @@
+:root {
+    --wm-black: #000000;
+    --wm-dark: #121212;
+    --wm-gray: #1a1a1a;
+    --wm-light-gray: #2a2a2a;
+    --wm-white: #ffffff;
+    --wm-blue: #1e50e2;
+    --wm-blue-hover: #0d3cb0;
+    --wm-pink: #ff4d8d;
+    --wm-pink-hover: #e03a7a;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--wm-dark);
+    color: var(--wm-white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.custom-header-footer {
+    background-color: var(--wm-black);
+    color: var(--wm-white);
+    padding: 15px 5%;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    border-bottom: none;
+}
+
+.logo-center {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--wm-white);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    margin: 0;
+}
+
+.logo-center::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--wm-blue), var(--wm-pink));
+}
+
+/* Content */
+.content {
+    padding: 30px;
+    background-color: var(--wm-dark);
+    flex: 1;
+}
+
+/* Buttons */
+.btn-primary {
+    background: linear-gradient(90deg, var(--wm-blue), var(--wm-pink));
+    color: var(--wm-white);
+    border: none;
+    font-weight: 600;
+    padding: 12px 30px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(90deg, var(--wm-blue-hover), var(--wm-pink-hover));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(30, 80, 226, 0.6);
+}
+
+/* Cards */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 8px;
+    background-color: var(--wm-gray);
+    border: none;
+    color: var(--wm-white);
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.card-header {
+    font-weight: 600;
+    background-color: var(--wm-light-gray);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Dropdown */
+.dropdown-toggle {
+    background-color: var(--wm-gray);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--wm-white);
+    padding: 10px 20px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+.dropdown-toggle:hover {
+    background-color: var(--wm-light-gray);
+}
+
+.dropdown-menu {
+    background-color: var(--wm-gray);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.dropdown-item {
+    color: var(--wm-white);
+    padding: 10px 20px;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--wm-light-gray);
+    color: var(--wm-white);
+}
+
+/* Form controls */
+.form-control,
+.form-select {
+    background-color: var(--wm-gray);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--wm-white);
+    border-radius: 4px;
+    padding: 10px 15px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--wm-gray);
+    color: var(--wm-white);
+    border-color: var(--wm-blue);
+    box-shadow: 0 0 0 0.25rem rgba(30, 80, 226, 0.25);
+}
+
+/* table */
+.table {
+    color: var(--wm-white);
+    border-color: var(--wm-light-gray)!important;
+    background-color: var(--wm-gray)!important;
+}
+
+.table th {
+    color: var(--wm-white);
+    border-color: var(--wm-light-gray)!important;
+    background-color: var(--wm-gray)!important;
+}
+
+.table td {
+    color: var(--wm-white);
+    border-color: var(--wm-light-gray)!important;
+    background-color: var(--wm-gray)!important;
+}
+
+/* Footer */
+.footer-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: var(--wm-white);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--wm-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--wm-light-gray);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--wm-blue);
+}
+
+/* side bar */
+.sidebar {
+    background-color: var(--wm-gray);
+    padding: 20px;
+    color: var(--wm-white);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    background-color: transparent;
+    padding: 12px 15px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    transform: translateX(5px);
+    color: var(--wm-white) !important;
+}
+
+.nav-link.active {
+    background: linear-gradient(90deg, var(--wm-blue), var(--wm-pink));
+    color: var(--wm-white) !important;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(30, 80, 226, 0.3);
+}
+
+.nav-link i {
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar-header {
+    padding: 10px 0;
+    margin-bottom: 20px;
+}
+
+/* admin dashboard */
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+}
+.bg-gradient-success {
+    background: linear-gradient(135deg, #1cc88a 0%, #13855c 100%);
+}
+.bg-gradient-warning {
+    background: linear-gradient(135deg, #f6c23e 0%, #dda20a 100%);
+}
+.bg-gradient-danger {
+    background: linear-gradient(135deg, #e74a3b 0%, #be2617 100%);
+}
+.bg-gradient-dark {
+    background: linear-gradient(135deg, #5a5c69 0%, #373840 100%);
+}
+.text-gray-300 {
+    color: #dddfeb;
+}
+.text-gray-500 {
+    color: #b7b9cc;
+}
+.timeline {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+    padding-left: 20px;
+    border-left: 2px solid rgba(255,255,255,0.2);
+}
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+.timeline-item-content {
+    padding-left: 15px;
+}
+.timeline-item-content .time {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8rem;
+}
+.progress-container {
+    position: relative;
+}
+.progress {
+    height: 10px;
+    border-radius: 10px;
+    background-color: rgba(255,255,255,0.1);
+}
+.progress-bar {
+    border-radius: 10px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.hover-pointer:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important; /* Warna hover yang lebih cocok untuk tema gelap */
+    transition: background-color 0.2s ease;
+}
+
+/* Mencegah klik pada cell tombol navigasi ke detail */
+.action-buttons {
+    position: relative;
+    z-index: 10;
+}
+
+.action-buttons * {
+    position: relative;
+    z-index: 10;
+}
+
+/* Efek hover tambahan untuk tombol */
+.btn-info:hover, .btn-danger:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

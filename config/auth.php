@@ -25,11 +25,23 @@ return [
             'driver' => 'session',
             'provider' => 'mahasiswa',
         ],
+
+        // Tambahan untuk admin
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admin-users',
+        ],
     ],
 
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+
+        // Custom provider for admin users
+        'admin-users' => [
+            'driver' => 'admin-provider',
             'model' => App\Models\User::class,
         ],
 

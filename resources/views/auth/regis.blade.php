@@ -204,6 +204,23 @@
             text-decoration: underline;
         }
 
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #ff6b7d;
+        }
+
+        .alert ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+
         .floating-icons {
             position: absolute;
             top: 0;
@@ -292,12 +309,61 @@
 
         <h2 class="register-title">Buat Akun Baru</h2>
 
-        <form action="/register" method="POST">
+        @if ($errors->any())
+            <div class="alert alert-danger mb-4">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="/regis" method="POST">
+            @csrf
             <div class="form-group">
-                <label for="name">Nama Lengkap</label>
-                <input type="text" id="name" name="name" class="form-control"
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" name="nama" class="form-control"
                     placeholder="Masukkan nama lengkap" required>
                 <i class="fas fa-user input-icon"></i>
+            </div>
+
+            <div class="form-group">
+                <label for="nim">NIM</label>
+                <input type="text" id="nim" name="nim" class="form-control"
+                    placeholder="Masukkan NIM (8 karakter)" required maxlength="8">
+                <i class="fas fa-id-card input-icon"></i>
+            </div>
+
+            <div class="form-group">
+                <label for="jurusan">Jurusan</label>
+                <input type="text" id="jurusan" name="jurusan" class="form-control" placeholder="Masukkan jurusan"
+                    required>
+                <i class="fas fa-graduation-cap input-icon"></i>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" class="form-control" required>
+                    <option value="" disabled selected>Pilih gender</option>
+                    <option value="1">Laki-laki</option>
+                    <option value="0">Perempuan</option>
+                </select>
+                <i class="fas fa-venus-mars input-icon"></i>
+            </div>
+
+            <div class="form-group">
+                <label for="angkatan">Angkatan</label>
+                <input type="text" id="angkatan" name="angkatan" class="form-control"
+                    placeholder="Masukkan angkatan (contoh: 2022)" required>
+                <i class="fas fa-calendar input-icon"></i>
+            </div>
+
+            <div class="form-group">
+                <label for="syarat_lpk">Syarat LPK</label>
+                <input type="number" id="syarat_lpk" name="syarat_lpk" class="form-control"
+                    placeholder="Masukkan syarat LPK" required>
+                <i class="fas fa-clipboard-check input-icon"></i>
             </div>
 
             <div class="form-group">
@@ -305,13 +371,6 @@
                 <input type="email" id="email" name="email" class="form-control"
                     placeholder="Masukkan email Anda" required>
                 <i class="fas fa-envelope input-icon"></i>
-            </div>
-
-            <div class="form-group">
-                <label for="phone">Nomor Telepon</label>
-                <input type="tel" id="phone" name="phone" class="form-control"
-                    placeholder="Masukkan nomor telepon" required>
-                <i class="fas fa-phone input-icon"></i>
             </div>
 
             <div class="form-group">
@@ -325,8 +384,8 @@
             </div>
 
             <div class="form-group">
-                <label for="confirm-password">Konfirmasi Password</label>
-                <input type="password" id="confirm-password" name="confirm_password" class="form-control"
+                <label for="password_confirmation">Konfirmasi Password</label>
+                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control"
                     placeholder="Ulangi password" required>
                 <i class="fas fa-lock input-icon"></i>
             </div>
@@ -335,7 +394,8 @@
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="terms" required>
                     <label class="form-check-label" for="terms" style="color: rgba(255, 255, 255, 0.7);">
-                        Saya menyetujui <a href="#" style="color: var(--wm-blue);">Syarat dan Ketentuan</a> serta
+                        Saya menyetujui <a href="#" style="color: var(--wm-blue);">Syarat dan Ketentuan</a>
+                        serta
                         <a href="#" style="color: var(--wm-blue);">Kebijakan Privasi</a>
                     </label>
                 </div>
@@ -402,6 +462,47 @@
             floatingIcons.appendChild(icon);
         }
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+    @php
+        $success = session('success');
+        $error = session('error');
+    @endphp
+
+    @if ($success)
+        <script>
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: "success",
+                title: "{{ $success }}"
+            });
+        </script>
+    @endif
+
+    @if ($error)
+        <script>
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+        </script>
+    @endif
 </body>
 
 </html>
