@@ -30,12 +30,37 @@
                     
                     <div class="mb-3">
                         <h6 class="text-white">Fakultas:</h6>
-                        <p class="text-gray-300">{{ $mahasiswa->fakultas ?? $mahasiswa->jurusan }}</p>
+                        <p class="text-gray-300">{{ $mahasiswa->fakultas }}</p>
                     </div>
                     
                     <div class="mb-3">
-                        <h6 class="text-white">Prodi:</h6>
-                        <p class="text-gray-300">{{ $mahasiswa->prodi ?? $mahasiswa->jurusan }}</p>
+                        <h6 class="text-white">Jurusan/Prodi:</h6>
+                        <p class="text-gray-300">{{ $mahasiswa->jurusan }}</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6 class="text-white">Angkatan:</h6>
+                        <p class="text-gray-300">{{ $mahasiswa->angkatan }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="text-white">Jenis Kelamin:</h6>
+                        <p class="text-gray-300">{{ $mahasiswa->gender }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="text-white">Nomor HP:</h6>
+                        <p class="text-gray-300">{{ $mahasiswa->no_hp ?? '-' }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="text-white">IPK Terakhir:</h6>
+                        <p class="text-gray-300">{{ $mahasiswa->ipk_terakhir ?? '0.00' }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="text-white">Alamat:</h6>
+                        <p class="text-gray-300">{{ $mahasiswa->alamat ?? '-' }}</p>
                     </div>
                     
                     <div class="mb-3">

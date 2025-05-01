@@ -55,9 +55,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
-                                        <label for="prodi">Prodi</label>
-                                        <input type="text" class="form-control @error('prodi') is-invalid @enderror" id="prodi" name="prodi" value="{{ old('prodi') }}" placeholder="Masukkan Prodi" required>
-                                        @error('prodi')
+                                        <label for="jurusan">Jurusan/Prodi</label>
+                                        <input type="text" class="form-control @error('jurusan') is-invalid @enderror" id="jurusan" name="jurusan" value="{{ old('jurusan') }}" placeholder="Masukkan Jurusan/Prodi" required>
+                                        @error('jurusan')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -65,7 +65,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label for="angkatan">Angkatan</label>
                                         <input type="text" class="form-control @error('angkatan') is-invalid @enderror" id="angkatan" name="angkatan" value="{{ old('angkatan') }}" placeholder="Masukkan Angkatan" required>
@@ -74,7 +74,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label for="gender">Jenis Kelamin</label>
                                         <select class="form-select @error('gender') is-invalid @enderror" id="gender" name="gender" required>
@@ -86,11 +86,35 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
                                     <div class="form-group mb-3">
-                                        <label for="syarat_lpk">Syarat LPK</label>
-                                        <input type="number" class="form-control @error('syarat_lpk') is-invalid @enderror" id="syarat_lpk" name="syarat_lpk" value="{{ old('syarat_lpk', 0) }}" min="0">
-                                        @error('syarat_lpk')
+                                        <label for="no_hp">Nomor HP</label>
+                                        <input type="text" class="form-control @error('no_hp') is-invalid @enderror" id="no_hp" name="no_hp" value="{{ old('no_hp') }}" placeholder="Masukkan Nomor HP" maxlength="15">
+                                        @error('no_hp')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="ipk_terakhir">IPK Terakhir</label>
+                                        <input type="number" step="0.01" class="form-control @error('ipk_terakhir') is-invalid @enderror" id="ipk_terakhir" name="ipk_terakhir" value="{{ old('ipk_terakhir', '0.00') }}" min="0" max="4.00">
+                                        @error('ipk_terakhir')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group mb-3">
+                                        <label for="alamat">Alamat</label>
+                                        <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3" placeholder="Masukkan Alamat">{{ old('alamat') }}</textarea>
+                                        @error('alamat')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -99,7 +123,7 @@
 
                             <div class="alert alert-info">
                                 <small>Password akan dibuat otomatis: "mahasiswa123"</small><br>
-                                <small>Email akan dibuat otomatis dari NIM: "nim@student.ac.id"</small>
+                                <small>Email akan dibuat otomatis dari NIM: "nim@students.ukdw.ac.id"</small>
                             </div>
 
                             <div class="d-flex justify-content-end gap-4 my-4">

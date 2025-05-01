@@ -20,7 +20,6 @@ class CreateMahasiswasTable extends Migration
             $table->string('jurusan', 35);
             $table->enum('gender', ['Laki-laki', 'Perempuan']);
             $table->string('angkatan', 25);
-            $table->integer('syarat_lpk');
             $table->string('email', 50)->unique();
             $table->string('password', 255);
             $table->timestamps();

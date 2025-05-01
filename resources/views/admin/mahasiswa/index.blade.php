@@ -21,7 +21,7 @@
                                     <th>Nama Mahasiswa</th>
                                     <th>NIM</th>
                                     <th>Fakultas</th>
-                                    <th>Prodi</th>
+                                    <th>Jurusan/Prodi</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -32,8 +32,8 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $mahasiswa->nama }}</td>
                                         <td>{{ $mahasiswa->nim }}</td>
+                                        <td>{{ $mahasiswa->fakultas }}</td>
                                         <td>{{ $mahasiswa->jurusan }}</td>
-                                        <td>{{ $mahasiswa->angkatan }}</td>
                                         <td class="d-flex gap-2 justify-content-center action-buttons"
                                             onclick="event.stopPropagation()">
                                             <a href="{{ route('admin.mahasiswa.edit', $mahasiswa->id) }}"
