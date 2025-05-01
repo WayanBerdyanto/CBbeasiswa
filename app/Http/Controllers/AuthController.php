@@ -90,7 +90,7 @@ class AuthController extends Controller
     }
 
     // Proses logout
-    public function logout(Request $request)
+    public function logout()
     {
         try {
             Auth::guard('mahasiswa')->logout();
