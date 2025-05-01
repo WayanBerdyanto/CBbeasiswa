@@ -5,7 +5,9 @@ use App\Http\Controllers\Admin\AdminBeasiswaController;
 use App\Http\Controllers\Admin\AdminSyaratBeasiswaController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PeriodeBeasiswaController;
+use App\Http\Controllers\Admin\AdminDokumenController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
@@ -14,6 +16,8 @@ use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\SyaratController;
 use App\Http\Controllers\PengajuanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\Admin\AdminPengajuanController;
 use App\Http\Controllers\Admin\AdminLaporanController;
 use App\Http\Controllers\Admin\AdminMahasiswaController;
@@ -26,6 +30,9 @@ Route::get('/profile', [ProfileController::class, 'show'])->name('profile')->mid
 
 // ------------------- AUTH MAHASISWA -------------------
 Route::middleware(['auth:mahasiswa'])->group(function () {
+    // Mahasiswa Dashboard
+    Route::get('/mahasiswa/dashboard', [MahasiswaController::class, 'dashboard'])->name('mahasiswa.dashboard');
+    
     // Menampilkan daftar syarat dari semua beasiswa (dengan tombol ajukan)
     Route::get('/syarat-beasiswa', [PengajuanController::class, 'syaratBeasiswa'])->name('pengajuan.syarat');
 
@@ -34,15 +41,24 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
 
     // Simpan pengajuan beasiswa
     Route::post('/pengajuan/simpan', [PengajuanController::class, 'simpanPengajuan'])->name('pengajuan.simpan');
+
+    // Dokumen routes
+    Route::get('/dokumen/create/{pengajuanId}', [DokumenController::class, 'create'])->name('dokumen.create');
+    Route::post('/dokumen', [DokumenController::class, 'store'])->name('dokumen.store');
+    Route::get('/dokumen/{id}', [DokumenController::class, 'show'])->name('dokumen.show');
+    Route::get('/dokumen/{id}/edit', [DokumenController::class, 'edit'])->name('dokumen.edit');
+    Route::put('/dokumen/{id}', [DokumenController::class, 'update'])->name('dokumen.update');
+    Route::delete('/dokumen/{id}', [DokumenController::class, 'destroy'])->name('dokumen.destroy');
+    Route::get('/dokumen/{id}/download', [DokumenController::class, 'download'])->name('dokumen.download');
+    
+    // Halaman daftar pengajuan (hanya untuk mahasiswa yang sudah login)
+    Route::get('/pengajuan', [PengajuanController::class, 'daftar'])->name('pengajuan.index');
+    
+    // Hapus pengajuan
+    Route::delete('/pengajuan/{id}', [PengajuanController::class, 'hapus'])->name('pengajuan.hapus');
 });
 
-// Halaman daftar pengajuan (umum)
-Route::get('/pengajuan', [PengajuanController::class, 'daftar'])->name('pengajuan.index');
-
-// Hapus pengajuan
-Route::delete('/pengajuan/{id}', [PengajuanController::class, 'hapus'])->name('pengajuan.hapus');
-
-// ------------------- BEASISWA DAN SYARAT -------------------
+// ------------------- BEASISWA DAN SYARAT (Publik) -------------------
 Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
 
 // Menampilkan syarat berdasarkan ID beasiswa tertentu
@@ -56,14 +72,20 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/regis', [AuthController::class, 'showRegisForm'])->name('regis');
 Route::post('/regis', [AuthController::class, 'register']);
 
-// ------------------- HOME (SETELAH LOGIN) -------------------
-Route::middleware('auth')->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
-});
-
 // ------------------- DEFAULT -------------------
 Route::get('/', function () {
     return view('welcome');
+});
+
+// Redirect from /home to dashboard
+Route::get('/home', function() {
+    if(Auth::guard('mahasiswa')->check()) {
+        return redirect()->route('mahasiswa.dashboard');
+    } else if(Auth::guard('admin')->check()) {
+        return redirect()->route('admin.dashboard');
+    } else {
+        return redirect()->route('login');
+    }
 });
 
 // admin login
@@ -124,6 +146,20 @@ Route::middleware(['auth:admin'])->group(function () {
         Route::resource('jenis-beasiswa', AdminJenisBeasiswaController::class);
         Route::resource('pengajuan', AdminPengajuanController::class);
         // Route::resource('syarat', AdminSyaratController::class);
+
+        // Admin dokumen verification
+        Route::patch('dokumen/{id}/verifikasi', [AdminDokumenController::class, 'verifikasi'])->name('dokumen.verifikasi');
+        
+        // Admin document routes
+        Route::get('dokumen/create/{pengajuanId}', [AdminDokumenController::class, 'create'])->name('dokumen.create');
+        Route::post('dokumen', [AdminDokumenController::class, 'store'])->name('dokumen.store');
+        Route::get('dokumen/{id}', [AdminDokumenController::class, 'show'])->name('dokumen.show');
+        Route::get('dokumen/{id}/edit', [AdminDokumenController::class, 'edit'])->name('dokumen.edit');
+        Route::get('dokumen/{id}/verifikasi', [AdminDokumenController::class, 'verifikasiForm'])->name('dokumen.verifikasi.form');
+        Route::patch('dokumen/{id}/verifikasi', [AdminDokumenController::class, 'verifikasi'])->name('dokumen.verifikasi');
+        Route::put('dokumen/{id}', [AdminDokumenController::class, 'update'])->name('dokumen.update');
+        Route::delete('dokumen/{id}', [AdminDokumenController::class, 'destroy'])->name('dokumen.destroy');
+        Route::get('dokumen/{id}/download', [AdminDokumenController::class, 'download'])->name('dokumen.download');
     });
 
 

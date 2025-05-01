@@ -20,7 +20,7 @@ class AdminPengajuanController extends Controller
 
     public function show($id)
     {
-        $pengajuan = Pengajuan::with(['beasiswa.jenisBeasiswa', 'mahasiswa', 'periode'])->find($id);
+        $pengajuan = Pengajuan::with(['beasiswa.jenisBeasiswa', 'mahasiswa', 'periode', 'dokumen'])->find($id);
         $beasiswa = Beasiswa::with('jenisBeasiswa')->find($pengajuan->id_beasiswa);
         $mahasiswa = Mahasiswa::find($pengajuan->id_mahasiswa);
         return view('admin.pengajuan.show', compact('pengajuan', 'beasiswa', 'mahasiswa'));

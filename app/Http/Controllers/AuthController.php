@@ -11,6 +11,11 @@ class AuthController extends Controller
     // Menampilkan form login
     public function showLoginForm()
     {
+        // Redirect if already logged in
+        if (Auth::guard('mahasiswa')->check()) {
+            return redirect()->route('mahasiswa.dashboard');
+        }
+        
         // Menyesuaikan ke file: resources/views/auth/login.blade.php
         return view('auth.login');
     }
@@ -22,7 +27,7 @@ class AuthController extends Controller
 
         try {
             if (Auth::guard('mahasiswa')->attempt($credentials)) {
-                return redirect()->intended('/home')->with('success', 'Login berhasil!');
+                return redirect()->route('mahasiswa.dashboard')->with('success', 'Login berhasil!');
             }
 
             return back()->with('error', 'Email atau password salah.');
@@ -34,6 +39,11 @@ class AuthController extends Controller
     // Menampilkan form registrasi
     public function showRegisForm()
     {
+        // Redirect if already logged in
+        if (Auth::guard('mahasiswa')->check()) {
+            return redirect()->route('mahasiswa.dashboard');
+        }
+        
         // Mengarahkan ke resources/views/auth/regis.blade.php
         return view('auth.regis');
     }
@@ -64,9 +74,9 @@ class AuthController extends Controller
                 'password' => bcrypt($request->password),
             ]);
 
-            auth()->login($mahasiswa);
+            Auth::guard('mahasiswa')->login($mahasiswa);
             
-            return redirect()->intended('/home')->with('success', 'Registrasi berhasil!');
+            return redirect()->route('mahasiswa.dashboard')->with('success', 'Registrasi berhasil!');
         } catch (\Exception $e) {
             return back()->withInput()
                 ->with('error', 'Terjadi kesalahan saat mendaftar: ' . $e->getMessage());

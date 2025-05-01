@@ -7,16 +7,19 @@
         </h4>
     </div>
     <ul class="nav flex-column">
+        @auth('mahasiswa')
         <li class="nav-item mb-2">
-            <a href="{{ url('/home') }}" class="nav-link {{ Request::is('home') ? 'active' : '' }}">
-                <i class="fas fa-home me-2"></i> Home
+            <a href="{{ route('mahasiswa.dashboard') }}" class="nav-link {{ Request::is('mahasiswa/dashboard') ? 'active' : '' }}">
+                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
             </a>
         </li>
+        @endauth
         <li class="nav-item mb-2">
             <a href="{{ url('/beasiswa') }}" class="nav-link {{ Request::is('beasiswa') ? 'active' : '' }}">
                 <i class="fas fa-graduation-cap me-2"></i> Beasiswa
             </a>
         </li>
+        @auth('mahasiswa')
         <li class="nav-item mb-2">
             <a href="{{ url('/pengajuan') }}" class="nav-link {{ Request::is('pengajuan*') ? 'active' : '' }}">
                 <i class="fas fa-bullhorn me-2"></i> Daftar Pengajuan
@@ -27,6 +30,7 @@
                 <i class="fas fa-file-alt me-2"></i> Laporan
             </a>
         </li>
+        @endauth
     </ul>
 </nav>
 

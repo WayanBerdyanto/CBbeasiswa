@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Syarat;
 use App\Models\Pengajuan;
+use App\Models\Dokumen;
+use App\Models\PeriodeBeasiswa;
 use Illuminate\Support\Facades\Storage;
 
 class PengajuanController extends Controller
@@ -22,8 +24,11 @@ class PengajuanController extends Controller
     {
         $user = Auth::guard('mahasiswa')->user();
         $syarat = Syarat::where('id_beasiswa', $id)->first();
+        $periodeAktif = PeriodeBeasiswa::where('id_beasiswa', $id)
+            ->where('status', 'aktif')
+            ->first();
 
-        return view('beasiswa.formPengajuan', compact('user', 'syarat'));
+        return view('beasiswa.formPengajuan', compact('user', 'syarat', 'periodeAktif'));
     }
 
     // Menyimpan data pengajuan beasiswa
@@ -32,27 +37,47 @@ class PengajuanController extends Controller
         $request->validate([
             'id_beasiswa' => 'required|exists:beasiswa,id_beasiswa',
             'alasan_pengajuan' => 'required|string',
-            'dokumen' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'ipk' => 'required|numeric|min:0|max:4',
+            'dokumen_file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // max 5MB
+            'nama_dokumen' => 'required|string|max:255',
         ]);
 
-        $file = $request->file('dokumen')->store('dokumen', 'public');
-
-        Pengajuan::create([
+        // Get active period
+        $periode = PeriodeBeasiswa::where('id_beasiswa', $request->id_beasiswa)
+            ->where('status', 'aktif')
+            ->first();
+            
+        // Create pengajuan
+        $pengajuan = Pengajuan::create([
             'id_beasiswa' => $request->id_beasiswa,
             'id_mahasiswa' => Auth::guard('mahasiswa')->id(),
+            'id_periode' => $periode ? $periode->id_periode : null,
             'status_pengajuan' => 'diproses',
             'tgl_pengajuan' => now(),
             'alasan_pengajuan' => $request->alasan_pengajuan,
-            'dokumen' => $file
+            'ipk' => $request->ipk,
+        ]);
+        
+        // Upload and store document
+        $file = $request->file('dokumen_file');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $filePath = $file->storeAs('dokumen', $fileName, 'public');
+        
+        // Create document record
+        Dokumen::create([
+            'id_pengajuan' => $pengajuan->id_pengajuan,
+            'nama_dokumen' => $request->nama_dokumen,
+            'file_path' => $filePath,
+            'status_verifikasi' => 'belum_diverifikasi',
         ]);
 
-        return redirect()->route('beasiswa.index')->with('success', 'Pengajuan berhasil dikirim!');
+        return redirect()->route('pengajuan.index')->with('success', 'Pengajuan berhasil dikirim!');
     }
 
     // Menampilkan daftar pengajuan beasiswa milik user yang login
     public function daftar()
     {
-        $pengajuan = Pengajuan::with('beasiswa')
+        $pengajuan = Pengajuan::with(['beasiswa', 'dokumen'])
             ->where('id_mahasiswa', Auth::guard('mahasiswa')->id())
             ->get();
 
@@ -66,8 +91,12 @@ class PengajuanController extends Controller
             ->where('id_mahasiswa', Auth::guard('mahasiswa')->id())
             ->firstOrFail();
 
-        if ($pengajuan->dokumen) {
-            Storage::disk('public')->delete($pengajuan->dokumen);
+        // Delete all related documents
+        foreach ($pengajuan->dokumen as $dokumen) {
+            if ($dokumen->file_path) {
+                Storage::disk('public')->delete($dokumen->file_path);
+            }
+            $dokumen->delete();
         }
 
         $pengajuan->delete();
