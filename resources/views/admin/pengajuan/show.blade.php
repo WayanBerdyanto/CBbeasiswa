@@ -183,6 +183,10 @@
                                     class="btn btn-info">
                                     <i class="fas fa-edit me-1"></i> Edit
                                 </a>
+                                <a href="{{ route('admin.pengajuan.pdf', $pengajuan->id_pengajuan) }}"
+                                    class="btn btn-primary" target="_blank">
+                                    <i class="fas fa-file-pdf me-1"></i> Lihat PDF
+                                </a>
                                 <form action="{{ route('admin.pengajuan.destroy', $pengajuan->id_pengajuan) }}"
                                     method="POST" class="d-inline">
                                     @csrf

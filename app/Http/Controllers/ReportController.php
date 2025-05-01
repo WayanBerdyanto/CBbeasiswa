@@ -100,7 +100,7 @@ class ReportController extends Controller
         ));
     }
     
-    public function exportPdf()
+    public function exportPdf($download = true)
     {
         $mahasiswa = Auth::guard('mahasiswa')->user();
         
@@ -127,7 +127,20 @@ class ReportController extends Controller
         $pdf = PDF::loadView('mahasiswa.laporan.pdf', $data);
         $filename = 'laporan_beasiswa_' . $mahasiswa->nim . '_' . date('d-m-Y') . '.pdf';
         
-        return $pdf->download($filename);
+        // Return based on whether to download or stream
+        if ($download === 'view' || $download === false) {
+            return $pdf->stream($filename);
+        } else {
+            return $pdf->download($filename);
+        }
+    }
+    
+    /**
+     * View PDF in browser instead of downloading
+     */
+    public function viewPdf()
+    {
+        return $this->exportPdf('view');
     }
     
     public function detailPengajuan($id)

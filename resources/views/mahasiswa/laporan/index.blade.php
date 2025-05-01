@@ -19,9 +19,14 @@
                                 <p class="fw-light mb-0">{{ $mahasiswa->nama }} | {{ $mahasiswa->nim }}</p>
                             </div>
                         </div>
-                        <a href="{{ route('report.export.pdf') }}" class="btn btn-primary">
-                            <i class="fas fa-download me-2"></i> Unduh PDF
-                        </a>
+                        <div>
+                            <a href="{{ route('report.view.pdf') }}" class="btn btn-info me-2" target="_blank">
+                                <i class="fas fa-eye me-2"></i> Lihat PDF
+                            </a>
+                            <a href="{{ route('report.export.pdf') }}" class="btn btn-primary">
+                                <i class="fas fa-download me-2"></i> Unduh PDF
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

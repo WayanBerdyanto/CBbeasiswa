@@ -65,6 +65,7 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
     // Student report routes
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');
     Route::get('/report/export-pdf', [ReportController::class, 'exportPdf'])->name('report.export.pdf');
+    Route::get('/report/view-pdf', [ReportController::class, 'viewPdf'])->name('report.view.pdf');
     Route::get('/report/pengajuan/{id}', [ReportController::class, 'detailPengajuan'])->name('report.pengajuan.detail');
 });
 
@@ -135,6 +136,9 @@ Route::middleware(['auth:admin'])->group(function () {
 
         // Pengajuan detail - pindahkan setelah semua route spesifik
         Route::get('pengajuan/{id}', [AdminPengajuanController::class, 'show'])->name('pengajuan.show');
+        
+        // View PDF in browser
+        Route::get('pengajuan/{id}/pdf', [AdminPengajuanController::class, 'viewPdf'])->name('pengajuan.pdf');
 
         // Pengajuan store
         Route::post('pengajuan', [AdminPengajuanController::class, 'store'])->name('pengajuan.store');

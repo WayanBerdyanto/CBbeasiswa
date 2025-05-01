@@ -74,6 +74,9 @@
     <div class="header">
         <h1>{{ $title }}</h1>
         <p>Tanggal laporan: {{ $date }}</p>
+        @if(isset($isAdmin) && $isAdmin)
+            <p class="text-center"><strong>Dilihat oleh Admin</strong></p>
+        @endif
     </div>
     
     <div class="student-info">
