@@ -555,6 +555,20 @@ body {
     box-shadow: 0 4px 12px rgba(30, 80, 226, 0.25);
 }
 
+.btn-action.btn-edit {
+    background-color: rgba(44, 16, 224, 0.784);
+    color: var(--wm-white);
+    margin-left: 0.5rem;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(44, 16, 224, 0.15);
+}
+
+.btn-action.btn-edit:hover {
+    background-color: rgba(44, 16, 224, 0.784);;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(44, 16, 224, 0.25);
+}
+
 .btn-action.btn-delete {
     background-color: rgba(255, 77, 141, 0.2);
     color: var(--wm-pink);

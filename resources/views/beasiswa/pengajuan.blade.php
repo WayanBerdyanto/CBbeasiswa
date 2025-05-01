@@ -97,12 +97,23 @@
                                         action="{{ route('pengajuan.hapus', $item->id_pengajuan) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" 
-                                                class="btn-action btn-delete" 
-                                                data-id="{{ $item->id_pengajuan }}"
-                                                title="Hapus Pengajuan">
-                                            <i class="fas fa-trash-alt btn-icon"></i> Hapus
-                                        </button>
+                                        
+                                        <div class="btn-group">
+                                            @if($item->status_pengajuan == 'diproses')
+                                                <a href="{{ route('pengajuan.edit', $item->id_pengajuan) }}" 
+                                                   class="btn-action btn-edit"
+                                                   title="Edit Pengajuan">
+                                                    <i class="fas fa-edit btn-icon"></i> Edit
+                                                </a>
+                                            @endif
+                                            
+                                            <button type="button" 
+                                                    class="btn-action btn-delete" 
+                                                    data-id="{{ $item->id_pengajuan }}"
+                                                    title="Hapus Pengajuan">
+                                                <i class="fas fa-trash-alt btn-icon"></i> Hapus
+                                            </button>
+                                        </div>
                                     </form>
                                 </td>
                             </tr>

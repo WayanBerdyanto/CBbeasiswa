@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\AdminLaporanController;
 use App\Http\Controllers\Admin\AdminMahasiswaController;
 use App\Http\Controllers\Admin\AdminJenisBeasiswaController;
 use App\Http\Controllers\Admin\AdminSyaratController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile')->middleware('auth');
 
@@ -41,6 +42,10 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
 
     // Simpan pengajuan beasiswa
     Route::post('/pengajuan/simpan', [PengajuanController::class, 'simpanPengajuan'])->name('pengajuan.simpan');
+    
+    // Edit pengajuan beasiswa
+    Route::get('/pengajuan/{id}/edit', [PengajuanController::class, 'edit'])->name('pengajuan.edit');
+    Route::put('/pengajuan/{id}/update', [PengajuanController::class, 'update'])->name('pengajuan.update');
 
     // Dokumen routes
     Route::get('/dokumen/create/{pengajuanId}', [DokumenController::class, 'create'])->name('dokumen.create');
@@ -56,6 +61,11 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
     
     // Hapus pengajuan
     Route::delete('/pengajuan/{id}', [PengajuanController::class, 'hapus'])->name('pengajuan.hapus');
+
+    // Student report routes
+    Route::get('/report', [ReportController::class, 'index'])->name('report.index');
+    Route::get('/report/export-pdf', [ReportController::class, 'exportPdf'])->name('report.export.pdf');
+    Route::get('/report/pengajuan/{id}', [ReportController::class, 'detailPengajuan'])->name('report.pengajuan.detail');
 });
 
 // ------------------- BEASISWA DAN SYARAT (Publik) -------------------

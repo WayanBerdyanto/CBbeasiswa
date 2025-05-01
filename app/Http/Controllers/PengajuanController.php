@@ -8,6 +8,7 @@ use App\Models\Syarat;
 use App\Models\Pengajuan;
 use App\Models\Dokumen;
 use App\Models\PeriodeBeasiswa;
+use App\Models\Beasiswa;
 use Illuminate\Support\Facades\Storage;
 
 class PengajuanController extends Controller
@@ -72,6 +73,60 @@ class PengajuanController extends Controller
         ]);
 
         return redirect()->route('pengajuan.index')->with('success', 'Pengajuan berhasil dikirim!');
+    }
+
+    // Menampilkan form edit pengajuan
+    public function edit($id)
+    {
+        $mahasiswa = Auth::guard('mahasiswa')->user();
+        
+        // Find the application and ensure it belongs to the logged-in student
+        $pengajuan = Pengajuan::with(['beasiswa', 'dokumen'])
+            ->where('id_pengajuan', $id)
+            ->where('id_mahasiswa', $mahasiswa->id)
+            ->firstOrFail();
+        
+        // Check if the application is in "diproses" status
+        // Only allow editing if the application is still being processed
+        if ($pengajuan->status_pengajuan !== 'diproses') {
+            return redirect()->route('pengajuan.index')
+                ->with('error', 'Pengajuan tidak dapat diedit karena status sudah ' . $pengajuan->status_pengajuan);
+        }
+        
+        $beasiswa = Beasiswa::find($pengajuan->id_beasiswa);
+        
+        return view('beasiswa.editPengajuan', compact('pengajuan', 'beasiswa', 'mahasiswa'));
+    }
+    
+    // Update pengajuan beasiswa
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'alasan_pengajuan' => 'required|string',
+            'ipk' => 'required|numeric|min:0|max:4',
+        ]);
+        
+        $mahasiswa = Auth::guard('mahasiswa')->user();
+        
+        // Find the application and ensure it belongs to the logged-in student
+        $pengajuan = Pengajuan::where('id_pengajuan', $id)
+            ->where('id_mahasiswa', $mahasiswa->id)
+            ->firstOrFail();
+        
+        // Check if the application is in "diproses" status
+        if ($pengajuan->status_pengajuan !== 'diproses') {
+            return redirect()->route('pengajuan.index')
+                ->with('error', 'Pengajuan tidak dapat diedit karena status sudah ' . $pengajuan->status_pengajuan);
+        }
+        
+        // Update the application
+        $pengajuan->update([
+            'alasan_pengajuan' => $request->alasan_pengajuan,
+            'ipk' => $request->ipk,
+        ]);
+        
+        return redirect()->route('pengajuan.index')
+            ->with('success', 'Pengajuan berhasil diperbarui');
     }
 
     // Menampilkan daftar pengajuan beasiswa milik user yang login
