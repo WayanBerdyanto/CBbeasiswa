@@ -42,6 +42,7 @@ class AdminLaporanController extends Controller
         $pengajuanByBeasiswa = DB::table('beasiswa')
             ->leftJoin('pengajuan', 'beasiswa.id_beasiswa', '=', 'pengajuan.id_beasiswa')
             ->select(
+                'beasiswa.id_beasiswa',
                 'beasiswa.nama_beasiswa',
                 DB::raw('count(pengajuan.id_pengajuan) as total'),
                 DB::raw('count(case when pengajuan.status_pengajuan = "diterima" then 1 end) as diterima'),
