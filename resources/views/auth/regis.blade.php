@@ -3,7 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#121212">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Daftar - CBScholarships</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -37,6 +40,7 @@
                 radial-gradient(circle at 80% 70%, rgba(255, 77, 141, 0.15) 0%, transparent 30%);
             background-size: 200% 200%;
             animation: gradientBG 15s ease infinite;
+            padding: 20px;
         }
 
         @keyframes gradientBG {
@@ -55,7 +59,7 @@
 
         .register-container {
             width: 100%;
-            max-width: 500px;
+            max-width: 900px;
             padding: 40px;
             background-color: rgba(26, 26, 26, 0.9);
             border-radius: 15px;
@@ -65,6 +69,7 @@
             position: relative;
             overflow: hidden;
             z-index: 1;
+            margin: 20px auto;
         }
 
         .register-container::before {
@@ -147,6 +152,7 @@
             color: var(--wm-white);
             font-size: 1rem;
             transition: all 0.3s ease;
+            box-sizing: border-box;
         }
 
         .form-control:focus {
@@ -156,11 +162,14 @@
             box-shadow: 0 0 0 3px rgba(255, 77, 141, 0.3);
         }
 
+        textarea.form-control {
+            padding-right: 40px;
+        }
+
         .input-icon {
             position: absolute;
             right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 47px;
             color: rgba(255, 255, 255, 0.5);
         }
 
@@ -276,11 +285,28 @@
             transition: width 0.3s ease;
         }
 
-        /* Responsive */
-        @media (max-width: 576px) {
+        /* Form grid for larger screens */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+
+        .form-col {
+            flex: 1 0 50%;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
             .register-container {
                 padding: 30px 20px;
-                margin: 0 15px;
+                margin: 10px;
             }
 
             .logo-text {
@@ -289,6 +315,41 @@
 
             .register-title {
                 font-size: 1.3rem;
+            }
+
+            .form-col {
+                flex: 1 0 100%;
+            }
+
+            .form-control {
+                padding: 12px 15px;
+            }
+
+            .input-icon {
+                right: 15px;
+                top: 44px;
+            }
+
+            .floating-icons {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 20px 15px;
+            }
+
+            .logo-text {
+                font-size: 1.5rem;
+            }
+
+            .btn-register {
+                padding: 12px;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
             }
         }
     </style>
@@ -321,65 +382,110 @@
 
         <form action="/regis" method="POST">
             @csrf
-            <div class="form-group">
-                <label for="nama">Nama Lengkap</label>
-                <input type="text" id="nama" name="nama" class="form-control"
-                    placeholder="Masukkan nama lengkap" required>
-                <i class="fas fa-user input-icon"></i>
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="nama">Nama Lengkap</label>
+                        <input type="text" id="nama" name="nama" class="form-control"
+                            placeholder="Masukkan nama lengkap" required>
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="nim">NIM</label>
+                        <input type="text" id="nim" name="nim" class="form-control"
+                            placeholder="Masukkan NIM (8 karakter)" required maxlength="8">
+                        <i class="fas fa-id-card input-icon"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="jurusan">Jurusan</label>
+                        <input type="text" id="jurusan" name="jurusan" class="form-control" placeholder="Masukkan jurusan"
+                            required>
+                        <i class="fas fa-graduation-cap input-icon"></i>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="fakultas">Fakultas</label>
+                        <input type="text" id="fakultas" name="fakultas" class="form-control" placeholder="Masukkan fakultas"
+                            required>
+                        <i class="fas fa-university input-icon"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" class="form-control" required>
+                            <option value="" disabled selected>Pilih gender</option>
+                            <option value="1">Laki-laki</option>
+                            <option value="0">Perempuan</option>
+                        </select>
+                        <i class="fas fa-venus-mars input-icon"></i>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="angkatan">Angkatan</label>
+                        <input type="text" id="angkatan" name="angkatan" class="form-control"
+                            placeholder="Masukkan angkatan (contoh: 2022)" required>
+                        <i class="fas fa-calendar input-icon"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="no_hp">Nomor HP</label>
+                        <input type="text" id="no_hp" name="no_hp" class="form-control"
+                            placeholder="Masukkan nomor HP (opsional)" maxlength="15">
+                        <i class="fas fa-phone input-icon"></i>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="ipk_terakhir">IPK Terakhir</label>
+                        <input type="number" id="ipk_terakhir" name="ipk_terakhir" class="form-control" step="0.01" min="0" max="4.00"
+                            placeholder="Masukkan IPK terakhir (opsional)">
+                        <i class="fas fa-star input-icon"></i>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="nim">NIM</label>
-                <input type="text" id="nim" name="nim" class="form-control"
-                    placeholder="Masukkan NIM (8 karakter)" required maxlength="8">
-                <i class="fas fa-id-card input-icon"></i>
+                <label for="alamat">Alamat</label>
+                <textarea id="alamat" name="alamat" class="form-control" placeholder="Masukkan alamat (opsional)" rows="2"></textarea>
+                <i class="fas fa-map-marker-alt input-icon"></i>
             </div>
 
-            <div class="form-group">
-                <label for="jurusan">Jurusan</label>
-                <input type="text" id="jurusan" name="jurusan" class="form-control" placeholder="Masukkan jurusan"
-                    required>
-                <i class="fas fa-graduation-cap input-icon"></i>
-            </div>
-
-            <div class="form-group">
-                <label for="gender">Gender</label>
-                <select id="gender" name="gender" class="form-control" required>
-                    <option value="" disabled selected>Pilih gender</option>
-                    <option value="1">Laki-laki</option>
-                    <option value="0">Perempuan</option>
-                </select>
-                <i class="fas fa-venus-mars input-icon"></i>
-            </div>
-
-            <div class="form-group">
-                <label for="angkatan">Angkatan</label>
-                <input type="text" id="angkatan" name="angkatan" class="form-control"
-                    placeholder="Masukkan angkatan (contoh: 2022)" required>
-                <i class="fas fa-calendar input-icon"></i>
-            </div>
-
-            <div class="form-group">
-                <label for="syarat_lpk">Syarat LPK</label>
-                <input type="number" id="syarat_lpk" name="syarat_lpk" class="form-control"
-                    placeholder="Masukkan syarat LPK" required>
-                <i class="fas fa-clipboard-check input-icon"></i>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" class="form-control"
-                    placeholder="Masukkan email Anda" required>
-                <i class="fas fa-envelope input-icon"></i>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="form-control" placeholder="Buat password"
-                    required>
-                <i class="fas fa-lock input-icon"></i>
-                <div class="password-strength">
-                    <div class="strength-meter" id="strength-meter"></div>
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control"
+                            placeholder="Masukkan email Anda" required>
+                        <i class="fas fa-envelope input-icon"></i>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Buat password"
+                            required>
+                        <i class="fas fa-lock input-icon"></i>
+                        <div class="password-strength">
+                            <div class="strength-meter" id="strength-meter"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -461,10 +567,34 @@
             icon.style.fontSize = `${3 + Math.random() * 4}rem`;
             floatingIcons.appendChild(icon);
         }
+
+        // Form submission handling with loading indicator
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const submitBtn = document.querySelector('.btn-register');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> MENDAFTAR...';
+            submitBtn.disabled = true;
+            
+            // Let the form submit normally
+        });
+
+        // Adjust the layout based on screen size
+        function adjustLayout() {
+            const container = document.querySelector('.register-container');
+            if (window.innerWidth <= 480) {
+                document.querySelector('.logo-text').textContent = 'CBS';
+            } else {
+                document.querySelector('.logo-text').textContent = 'CBScholarships';
+            }
+        }
+
+        // Run on page load
+        adjustLayout();
+        
+        // Run on resize
+        window.addEventListener('resize', adjustLayout);
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 
 
     @php

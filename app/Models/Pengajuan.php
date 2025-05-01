@@ -42,4 +42,10 @@ class Pengajuan extends Model
     {
         return $this->belongsTo(PeriodeBeasiswa::class, 'id_periode', 'id_periode');
     }
+    
+    // Relasi ke tabel dokumen
+    public function dokumen()
+    {
+        return $this->hasMany(Dokumen::class, 'id_pengajuan', 'id_pengajuan');
+    }
 }

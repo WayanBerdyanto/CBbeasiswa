@@ -39,20 +39,26 @@ class AdminMahasiswaController extends Controller
     {
         try {
             $request->validate([
-                'nama' => 'required|string|max:255',
-                'nim' => 'required|string|max:8',
-                'fakultas' => 'required|string|max:255',
-                'prodi' => 'required|string|max:255',
-                'angkatan' => 'required|string|max:255',
+                'nama' => 'required|string|max:35',
+                'nim' => 'required|string|size:8|unique:mahasiswa,nim',
+                'fakultas' => 'required|string|max:35',
+                'jurusan' => 'required|string|max:35',
+                'angkatan' => 'required|string|max:25',
+                'gender' => 'required|in:Laki-laki,Perempuan',
+                'no_hp' => 'nullable|string|max:15',
+                'alamat' => 'nullable|string',
+                'ipk_terakhir' => 'nullable|numeric|min:0|max:4.00',
             ]);
 
             // Create data with default password
             $data = $request->all();
             $data['password'] = bcrypt('mahasiswa123'); // Default password
             $data['email'] = $request->nim . '@students.ukdw.ac.id'; // Default email based on NIM
-            $data['jurusan'] = $request->prodi; // Map prodi to jurusan field
-            $data['gender'] = 'Laki-laki'; // Default gender
-            $data['syarat_lpk'] = 0; // Default syarat_lpk value
+            
+            // Set default values for nullable fields if not provided
+            $data['no_hp'] = $request->no_hp ?? null;
+            $data['alamat'] = $request->alamat ?? null;
+            $data['ipk_terakhir'] = $request->ipk_terakhir ?? 0.00;
 
             Mahasiswa::create($data);
             return redirect()->route('admin.mahasiswa.index')->with('success', 'Mahasiswa berhasil ditambahkan');
@@ -94,7 +100,8 @@ class AdminMahasiswaController extends Controller
      */
     public function edit($id)
     {
-        //
+        $mahasiswa = Mahasiswa::findOrFail($id);
+        return view('admin.mahasiswa.edit', compact('mahasiswa'));
     }
 
     /**
@@ -106,7 +113,33 @@ class AdminMahasiswaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $mahasiswa = Mahasiswa::findOrFail($id);
+            
+            $request->validate([
+                'nama' => 'required|string|max:35',
+                'nim' => 'required|string|size:8|unique:mahasiswa,nim,'.$id,
+                'fakultas' => 'required|string|max:35',
+                'jurusan' => 'required|string|max:35',
+                'angkatan' => 'required|string|max:25',
+                'gender' => 'required|in:Laki-laki,Perempuan',
+                'no_hp' => 'nullable|string|max:15',
+                'alamat' => 'nullable|string',
+                'ipk_terakhir' => 'nullable|numeric|min:0|max:4.00',
+            ]);
+
+            $data = $request->all();
+            
+            // Set default values for nullable fields if not provided
+            $data['no_hp'] = $request->no_hp ?? null;
+            $data['alamat'] = $request->alamat ?? null;
+            $data['ipk_terakhir'] = $request->ipk_terakhir ?? 0.00;
+
+            $mahasiswa->update($data);
+            return redirect()->route('admin.mahasiswa.index')->with('success', 'Mahasiswa berhasil diperbarui');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.mahasiswa.edit', $id)->with('error', 'Gagal memperbarui mahasiswa: ' . $e->getMessage());
+        }
     }
 
     /**

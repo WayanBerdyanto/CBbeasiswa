@@ -9,6 +9,7 @@ use App\Models\Beasiswa;
 use App\Models\Mahasiswa;
 use App\Models\PeriodeBeasiswa;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminPengajuanController extends Controller
 {
@@ -20,7 +21,7 @@ class AdminPengajuanController extends Controller
 
     public function show($id)
     {
-        $pengajuan = Pengajuan::with(['beasiswa.jenisBeasiswa', 'mahasiswa', 'periode'])->find($id);
+        $pengajuan = Pengajuan::with(['beasiswa.jenisBeasiswa', 'mahasiswa', 'periode', 'dokumen'])->find($id);
         $beasiswa = Beasiswa::with('jenisBeasiswa')->find($pengajuan->id_beasiswa);
         $mahasiswa = Mahasiswa::find($pengajuan->id_mahasiswa);
         return view('admin.pengajuan.show', compact('pengajuan', 'beasiswa', 'mahasiswa'));
@@ -191,5 +192,32 @@ class AdminPengajuanController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal memperbarui status pengajuan: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Generate and display PDF for a student's application
+     */
+    public function viewPdf($id)
+    {
+        // Find the application
+        $pengajuan = Pengajuan::with(['beasiswa', 'beasiswa.jenisBeasiswa', 'dokumen', 'mahasiswa'])
+            ->findOrFail($id);
+        
+        // Prepare data for PDF
+        $data = [
+            'title' => 'Laporan Pengajuan Beasiswa',
+            'date' => date('d/m/Y H:i:s'),
+            'mahasiswa' => $pengajuan->mahasiswa,
+            'pengajuanList' => collect([$pengajuan]), // Wrap in collection to match view expectations
+            'count' => 1,
+            'isAdmin' => true
+        ];
+        
+        // Generate PDF
+        $pdf = PDF::loadView('mahasiswa.laporan.pdf', $data);
+        $filename = 'laporan_beasiswa_' . $pengajuan->mahasiswa->nim . '_' . $pengajuan->id_pengajuan . '.pdf';
+        
+        // Stream the PDF (display in browser)
+        return $pdf->stream($filename);
     }
 }

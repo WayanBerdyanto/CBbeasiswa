@@ -11,6 +11,11 @@ class AuthController extends Controller
     // Menampilkan form login
     public function showLoginForm()
     {
+        // Redirect if already logged in
+        if (Auth::guard('mahasiswa')->check()) {
+            return redirect()->route('mahasiswa.dashboard');
+        }
+        
         // Menyesuaikan ke file: resources/views/auth/login.blade.php
         return view('auth.login');
     }
@@ -22,7 +27,7 @@ class AuthController extends Controller
 
         try {
             if (Auth::guard('mahasiswa')->attempt($credentials)) {
-                return redirect()->intended('/home')->with('success', 'Login berhasil!');
+                return redirect()->route('mahasiswa.dashboard')->with('success', 'Login berhasil!');
             }
 
             return back()->with('error', 'Email atau password salah.');
@@ -34,6 +39,11 @@ class AuthController extends Controller
     // Menampilkan form registrasi
     public function showRegisForm()
     {
+        // Redirect if already logged in
+        if (Auth::guard('mahasiswa')->check()) {
+            return redirect()->route('mahasiswa.dashboard');
+        }
+        
         // Mengarahkan ke resources/views/auth/regis.blade.php
         return view('auth.regis');
     }
@@ -45,10 +55,13 @@ class AuthController extends Controller
             'nama' => 'required|string|max:35',
             'nim' => 'required|string|size:8|unique:mahasiswa',
             'jurusan' => 'required|string|max:35',
+            'fakultas' => 'required|string|max:35',
             'gender' => 'required|numeric',
             'angkatan' => 'required|string|max:25',
-            'syarat_lpk' => 'required|numeric',
-            'email' => 'required|email|max:25|unique:mahasiswa',
+            'no_hp' => 'nullable|string|max:15',
+            'alamat' => 'nullable|string',
+            'ipk_terakhir' => 'nullable|numeric|min:0|max:4.00',
+            'email' => 'required|email|max:50|unique:mahasiswa',
             'password' => 'required|min:6|confirmed',
         ]);
 
@@ -57,16 +70,19 @@ class AuthController extends Controller
                 'nama' => $request->nama,
                 'nim' => $request->nim,
                 'jurusan' => $request->jurusan,
-                'gender' => $request->gender,
+                'fakultas' => $request->fakultas,
+                'gender' => $request->gender == 1 ? 'Laki-laki' : 'Perempuan',
                 'angkatan' => $request->angkatan,
-                'syarat_lpk' => $request->syarat_lpk,
+                'no_hp' => $request->no_hp,
+                'alamat' => $request->alamat,
+                'ipk_terakhir' => $request->ipk_terakhir ?? 0.00,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
             ]);
 
-            auth()->login($mahasiswa);
+            Auth::guard('mahasiswa')->login($mahasiswa);
             
-            return redirect()->intended('/home')->with('success', 'Registrasi berhasil!');
+            return redirect()->route('mahasiswa.dashboard')->with('success', 'Registrasi berhasil!');
         } catch (\Exception $e) {
             return back()->withInput()
                 ->with('error', 'Terjadi kesalahan saat mendaftar: ' . $e->getMessage());
