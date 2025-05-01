@@ -17,23 +17,48 @@
                         <h2>Tambah Beasiswa</h2>
                     </div>
                     <div class="card-body p-4">
+                        @if(session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+                        
                         <form action="{{ route('admin.beasiswa.store') }}" method="post">
                             @csrf
                             <div class="form-group mb-4">
-                                <label for="nama">Nama Beasiswa</label>
-                                <input type="text" name="nama_beasiswa" class="form-control" id="nama_beasiswa" placeholder="Masukkan nama beasiswa">
+                                <label for="nama_beasiswa">Nama Beasiswa</label>
+                                <input type="text" name="nama_beasiswa" class="form-control @error('nama_beasiswa') is-invalid @enderror" 
+                                    id="nama_beasiswa" placeholder="Masukkan nama beasiswa" value="{{ old('nama_beasiswa') }}">
+                                @error('nama_beasiswa')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="form-group mb-4">
-                                <label for="jenis">Jenis Beasiswa</label>
-                                <select name="jenis" class="form-control" id="jenis">
-                                    @foreach ($jenis as $key => $item)
-                                        <option value="{{ $item['beasiswa'] }}">{{ $item['beasiswa'] }}</option>
-                                    @endforeach
-                                </select>
+                                <label for="id_jenis">Jenis Beasiswa</label>
+                                <div class="d-flex">
+                                    <select name="id_jenis" class="form-control @error('id_jenis') is-invalid @enderror" id="id_jenis">
+                                        <option value="">Pilih Jenis Beasiswa</option>
+                                        @foreach ($jenisBeasiswas as $jenis)
+                                            <option value="{{ $jenis->id_jenis }}" {{ old('id_jenis') == $jenis->id_jenis ? 'selected' : '' }}>
+                                                {{ $jenis->nama_jenis }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <a href="{{ route('admin.jenis-beasiswa.create') }}?beasiswa_id=new" class="btn btn-success ms-2" id="newJenisBtn">
+                                        <i class="fas fa-plus"></i> Baru
+                                    </a>
+                                </div>
+                                @error('id_jenis')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="form-group mb-4">
                                 <label for="deskripsi">Deskripsi</label>
-                                <textarea name="deskripsi" class="form-control" id="deskripsi" placeholder="Masukkan deskripsi beasiswa"></textarea>
+                                <textarea name="deskripsi" class="form-control @error('deskripsi') is-invalid @enderror" 
+                                    id="deskripsi" placeholder="Masukkan deskripsi beasiswa" rows="4">{{ old('deskripsi') }}</textarea>
+                                @error('deskripsi')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="d-flex justify-content-end gap-4 my-4">
                                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -45,3 +70,18 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if there's a selected jenis id in the session
+        const selectedJenisId = "{{ session('selected_jenis_id') }}";
+        if (selectedJenisId) {
+            const jenisSelect = document.getElementById('id_jenis');
+            if (jenisSelect) {
+                jenisSelect.value = selectedJenisId;
+            }
+        }
+    });
+</script>
+@endpush

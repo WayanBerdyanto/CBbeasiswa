@@ -11,7 +11,12 @@ class Beasiswa extends Model
 
     protected $table = 'beasiswa';
     protected $primaryKey = 'id_beasiswa';
-    protected $fillable = ['nama_beasiswa', 'jenis', 'deskripsi'];
+    protected $fillable = ['nama_beasiswa', 'id_jenis', 'deskripsi'];
+
+    public function jenisBeasiswa()
+    {
+        return $this->belongsTo(JenisBeasiswa::class, 'id_jenis', 'id_jenis');
+    }
 
     public function syarat()
     {
@@ -21,5 +26,10 @@ class Beasiswa extends Model
     public function pengajuan()
     {
         return $this->hasMany(Pengajuan::class, 'id_beasiswa');
+    }
+
+    public function periode()
+    {
+        return $this->hasMany(PeriodeBeasiswa::class, 'id_beasiswa', 'id_beasiswa');
     }
 }

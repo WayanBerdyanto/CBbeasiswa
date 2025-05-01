@@ -18,6 +18,16 @@
             </a>
         </li>
         <li class="nav-item mb-2">
+            <a href="{{ route('admin.jenis-beasiswa.index') }}" class="nav-link {{ Request::is('admin/jenis-beasiswa') ? 'active' : '' }}">
+                <i class="fas fa-tags me-2"></i> Jenis Beasiswa
+            </a>
+        </li>
+        <li class="nav-item mb-2">
+            <a href="{{ route('admin.periode.index') }}" class="nav-link {{ Request::is('admin/periode*') ? 'active' : '' }}">
+                <i class="fas fa-calendar-alt me-2"></i> Periode Beasiswa
+            </a>
+        </li>
+        <li class="nav-item mb-2">
             <a href="{{ route('admin.syarat.index') }}" class="nav-link {{ Request::is('admin/syarat') ? 'active' : '' }}">
                 <i class="fas fa-check-circle me-2"></i> Syarat
             </a>

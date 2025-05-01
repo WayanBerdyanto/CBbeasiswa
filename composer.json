@@ -9,11 +9,13 @@
     "license": "MIT",
     "require": {
         "php": "^7.3",
+        "barryvdh/laravel-dompdf": "^2.2",
         "fakerphp/faker": "^1.9",
         "fideloper/proxy": "^4.2",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.83",
-        "laravel/tinker": "^2.0"
+        "laravel/tinker": "^2.0",
+        "maatwebsite/excel": "^1.1"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

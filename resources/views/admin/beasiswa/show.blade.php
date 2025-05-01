@@ -25,7 +25,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <h5 class="text-blue-400">{{ $beasiswa->nama_beasiswa }}</h5>
-                        <span class="badge bg-primary">{{ $beasiswa->jenis }}</span>
+                        <span class="badge bg-primary">{{ $beasiswa->jenisBeasiswa ? $beasiswa->jenisBeasiswa->nama_jenis : 'Tidak ada jenis' }}</span>
                     </div>
                     
                     <div class="mb-3">
@@ -56,6 +56,62 @@
                             </button>
                         </form>
                     </div>
+                </div>
+            </div>
+
+            <div class="card bg-gray-800 border-0 shadow mb-4">
+                <div class="card-header bg-gradient-dark text-white d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold">Periode Beasiswa</h6>
+                    <a href="{{ route('admin.periode.create') }}?id_beasiswa={{ $beasiswa->id_beasiswa }}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus mr-1"></i> Tambah Periode
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if($beasiswa->periode && $beasiswa->periode->count() > 0)
+                        <div class="table-responsive">
+                            <table class="table table-hover text-white">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Periode</th>
+                                        <th>Tanggal Mulai</th>
+                                        <th>Tanggal Selesai</th>
+                                        <th>Kuota</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($beasiswa->periode as $periode)
+                                        <tr>
+                                            <td>{{ $periode->nama_periode }}</td>
+                                            <td>{{ $periode->tanggal_mulai->format('d M Y') }}</td>
+                                            <td>{{ $periode->tanggal_selesai->format('d M Y') }}</td>
+                                            <td>{{ $periode->kuota }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ $periode->status == 'aktif' ? 'success' : 'danger' }}">
+                                                    {{ $periode->status == 'aktif' ? 'Aktif' : 'Tidak Aktif' }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('admin.periode.show', $periode->id_periode) }}" 
+                                                   class="btn btn-sm btn-info">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="text-center py-3">
+                            <i class="fas fa-calendar-alt fa-2x text-gray-500 mb-2"></i>
+                            <p class="text-gray-300">Belum ada periode yang dibuat untuk beasiswa ini.</p>
+                            <a href="{{ route('admin.periode.create') }}?id_beasiswa={{ $beasiswa->id_beasiswa }}" class="btn btn-primary mt-2">
+                                <i class="fas fa-plus mr-1"></i> Tambah Periode Sekarang
+                            </a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

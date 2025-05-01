@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminBeasiswaController;
 use App\Http\Controllers\Admin\AdminSyaratBeasiswaController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PeriodeBeasiswaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AuthController;
@@ -16,6 +17,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminPengajuanController;
 use App\Http\Controllers\Admin\AdminLaporanController;
 use App\Http\Controllers\Admin\AdminMahasiswaController;
+use App\Http\Controllers\Admin\AdminJenisBeasiswaController;
+use App\Http\Controllers\Admin\AdminSyaratController;
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile')->middleware('auth');
 
@@ -78,6 +81,10 @@ Route::middleware(['auth:admin'])->group(function () {
         // Syarat management
         Route::resource('syarat', AdminSyaratBeasiswaController::class);
 
+        // Periode Beasiswa management
+        Route::resource('periode', PeriodeBeasiswaController::class);
+        Route::patch('periode/{id}/toggle-status', [PeriodeBeasiswaController::class, 'toggleStatus'])->name('periode.toggle-status');
+
         // Mahasiswa management
         Route::resource('mahasiswa', AdminMahasiswaController::class);
 
@@ -110,9 +117,13 @@ Route::middleware(['auth:admin'])->group(function () {
         Route::delete('pengajuan/{id}', [AdminPengajuanController::class, 'destroy'])->name('pengajuan.destroy');
 
         // Reporting
-        Route::get('laporan', [AdminLaporanController::class, 'index'])->name('laporan.index');
         Route::get('laporan/export', [AdminLaporanController::class, 'export'])->name('laporan.export');
+        Route::resource('laporan', AdminLaporanController::class);
         
+        // Route resource
+        Route::resource('jenis-beasiswa', AdminJenisBeasiswaController::class);
+        Route::resource('pengajuan', AdminPengajuanController::class);
+        // Route::resource('syarat', AdminSyaratController::class);
     });
 
 

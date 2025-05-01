@@ -15,12 +15,12 @@ class BeasiswaSeeder extends Seeder
     public function run()
     {
         $beasiswaData = [
-            ["nama_beasiswa" => "Beasiswa Unggulan", "jenis" => "Beasiswa Prestasi Akademik", "deskripsi" => "Diberikan kepada mahasiswa dengan prestasi akademik terbaik."],
-            ["nama_beasiswa" => "Beasiswa Talenta", "jenis" => "Beasiswa Prestasi Umum", "deskripsi" => "Untuk mahasiswa yang memiliki prestasi di bidang non-akademik."],
-            ["nama_beasiswa" => "Beasiswa Bidikmisi", "jenis" => "Beasiswa Kebutuhan", "deskripsi" => "Diberikan kepada mahasiswa dari keluarga kurang mampu."],
-            ["nama_beasiswa" => "Beasiswa Peduli Bencana", "jenis" => "Beasiswa Bencana Alam", "deskripsi" => "Dikhususkan bagi mahasiswa terdampak bencana alam."],
-            ["nama_beasiswa" => "Beasiswa Scranton", "jenis" => "Beasiswa Scranton", "deskripsi" => "Beasiswa bagi mahasiswi yang berprestasi."],
-            ["nama_beasiswa" => "Beasiswa Erasmus", "jenis" => "Beasiswa Internasional", "deskripsi" => "Beasiswa untuk mahasiswa yang ingin studi di luar negeri."]
+            ["nama_beasiswa" => "Beasiswa Unggulan", "id_jenis" => 1, "deskripsi" => "Diberikan kepada mahasiswa dengan prestasi akademik terbaik."],
+            ["nama_beasiswa" => "Beasiswa Talenta", "id_jenis" => 2, "deskripsi" => "Untuk mahasiswa yang memiliki prestasi di bidang non-akademik."],
+            ["nama_beasiswa" => "Beasiswa Bidikmisi", "id_jenis" => 3, "deskripsi" => "Diberikan kepada mahasiswa dari keluarga kurang mampu."],
+            ["nama_beasiswa" => "Beasiswa Peduli Bencana", "id_jenis" => 4, "deskripsi" => "Dikhususkan bagi mahasiswa terdampak bencana alam."],
+            ["nama_beasiswa" => "Beasiswa Scranton", "id_jenis" => 5, "deskripsi" => "Beasiswa bagi mahasiswa yang berprestasi dalam penelitian."],
+            ["nama_beasiswa" => "Beasiswa Erasmus", "id_jenis" => 6, "deskripsi" => "Beasiswa untuk mahasiswa yang ingin studi di luar negeri."]
         ];
 
         DB::table('beasiswa')->insert($beasiswaData);

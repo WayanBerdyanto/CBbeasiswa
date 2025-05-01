@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Beasiswa;
+use App\Models\JenisBeasiswa;
 use Illuminate\Http\Request;
 
 class AdminBeasiswaController extends Controller
@@ -15,7 +16,7 @@ class AdminBeasiswaController extends Controller
      */
     public function index()
     {
-        $beasiswas = Beasiswa::paginate(10);
+        $beasiswas = Beasiswa::with('jenisBeasiswa')->paginate(10);
         return view('admin.beasiswa.index', compact('beasiswas'));
     }
 
@@ -26,17 +27,8 @@ class AdminBeasiswaController extends Controller
      */
     public function create()
     {
-
-        $jenis = [
-            ['beasiswa' => 'Beasiswa Prestasi Akademik'],
-            ['beasiswa' => 'Beasiswa Prestasi Non Akademik'],
-            ['beasiswa' => 'Beasiswa Berdasarkan Kebutuhan Ekonomi'],
-            ['beasiswa' => 'Beasiswa Penelitian dan Inovasi'],
-            ['beasiswa' => 'Beasiswa Pascasarjana'],
-            ['beasiswa' => 'Beasiswa Internasional'],
-            ['beasiswa' => 'Beasiswa Kemitraan Industri'],
-        ];
-        return view('admin.beasiswa.create', compact('jenis'));
+        $jenisBeasiswas = JenisBeasiswa::all();
+        return view('admin.beasiswa.create', compact('jenisBeasiswas'));
     }
 
     /**
@@ -50,14 +42,14 @@ class AdminBeasiswaController extends Controller
         try {
             $request->validate([
                 'nama_beasiswa' => 'required',
-                'jenis' => 'required',
+                'id_jenis' => 'required|exists:jenis_beasiswa,id_jenis',
                 'deskripsi' => 'required',
             ]);
 
             Beasiswa::create($request->all());
             return redirect()->route('admin.beasiswa.index')->with('success', 'Beasiswa berhasil ditambahkan');
         } catch (\Exception $e) {
-            return redirect()->route('admin.beasiswa.index')->with('error', 'Beasiswa gagal ditambahkan');
+            return redirect()->route('admin.beasiswa.create')->with('error', 'Beasiswa gagal ditambahkan: ' . $e->getMessage());
         }
     }
 
@@ -69,9 +61,9 @@ class AdminBeasiswaController extends Controller
      */
     public function show($id)
     {
-        $beasiswa = Beasiswa::with('syarat')->findOrFail($id);
+        $beasiswa = Beasiswa::with(['syarat', 'jenisBeasiswa'])->findOrFail($id);
 
-        // Statistik pengajuan (tambahkan jika relasi sudah ada)
+        // Statistik pengajuan
         $beasiswa->pengajuan_count = $beasiswa->pengajuan()->count();
         $beasiswa->pengajuan_diterima_count = $beasiswa->pengajuan()->where('status_pengajuan', 'diterima')->count();
         $beasiswa->pengajuan_diproses_count = $beasiswa->pengajuan()->where('status_pengajuan', 'diproses')->count();
@@ -88,17 +80,9 @@ class AdminBeasiswaController extends Controller
      */
     public function edit($id)
     {
-        $jenis = [
-            ['beasiswa' => 'Beasiswa Prestasi Akademik'],
-            ['beasiswa' => 'Beasiswa Prestasi Non Akademik'],
-            ['beasiswa' => 'Beasiswa Berdasarkan Kebutuhan Ekonomi'],
-            ['beasiswa' => 'Beasiswa Penelitian dan Inovasi'],
-            ['beasiswa' => 'Beasiswa Pascasarjana'],
-            ['beasiswa' => 'Beasiswa Internasional'],
-            ['beasiswa' => 'Beasiswa Kemitraan Industri'],
-        ];
-        $beasiswa = Beasiswa::find($id);
-        return view('admin.beasiswa.edit', compact('beasiswa', 'jenis'));
+        $jenisBeasiswas = JenisBeasiswa::all();
+        $beasiswa = Beasiswa::findOrFail($id);
+        return view('admin.beasiswa.edit', compact('beasiswa', 'jenisBeasiswas'));
     }
 
     /**
@@ -113,14 +97,14 @@ class AdminBeasiswaController extends Controller
         try {
             $request->validate([
                 'nama_beasiswa' => 'required',
-                'jenis' => 'required',
+                'id_jenis' => 'required|exists:jenis_beasiswa,id_jenis',
                 'deskripsi' => 'required',
             ]);
 
             Beasiswa::find($id)->update($request->all());
             return redirect()->route('admin.beasiswa.index')->with('success', 'Beasiswa berhasil diubah');
         } catch (\Exception $e) {
-            return redirect()->route('admin.beasiswa.index')->with('error', 'Beasiswa gagal diubah');
+            return redirect()->route('admin.beasiswa.edit', $id)->with('error', 'Beasiswa gagal diubah: ' . $e->getMessage());
         }
     }
 
@@ -136,7 +120,7 @@ class AdminBeasiswaController extends Controller
             Beasiswa::find($id)->delete();
             return redirect()->route('admin.beasiswa.index')->with('success', 'Beasiswa berhasil dihapus');
         } catch (\Exception $e) {
-            return redirect()->route('admin.beasiswa.index')->with('error', 'Beasiswa gagal dihapus');
+            return redirect()->route('admin.beasiswa.index')->with('error', 'Beasiswa gagal dihapus: ' . $e->getMessage());
         }
     }
 }

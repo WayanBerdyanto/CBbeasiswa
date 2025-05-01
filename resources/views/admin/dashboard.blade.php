@@ -34,6 +34,27 @@
             </div>
 
             <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card bg-gradient-info border-0 shadow h-100">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-white text-uppercase mb-1">Total Periode</div>
+                                <div class="h5 mb-0 font-weight-bold text-white">{{ $totalPeriode }}</div>
+                                <div class="small text-white">{{ $aktivePeriode }} Periode Aktif</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar-alt fa-2x text-white-50"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <a href="{{ route('admin.periode.index') }}" class="text-white small">Lihat detail <i
+                                    class="fas fa-arrow-right ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card bg-gradient-success border-0 shadow h-100">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -74,22 +95,54 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card bg-gradient-danger border-0 shadow h-100">
+        <!-- Periods aktif saat ini -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-gray-800 border-0 shadow">
+                    <div class="card-header bg-gradient-dark text-white d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold">Periode Beasiswa Aktif Saat Ini</h6>
+                        <a href="{{ route('admin.periode.create') }}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus mr-1"></i> Tambah Periode
+                        </a>
+                    </div>
                     <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-white text-uppercase mb-1">Pengajuan Ditolak</div>
-                                <div class="h5 mb-0 font-weight-bold text-white">{{ $penerimaanDitolak }}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-times-circle fa-2x text-white-50"></i>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered text-white" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Periode</th>
+                                        <th>Beasiswa</th>
+                                        <th>Tanggal Mulai</th>
+                                        <th>Tanggal Selesai</th>
+                                        <th>Kuota</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($currentPeriods as $periode)
+                                        <tr>
+                                            <td>{{ $periode->nama_periode }}</td>
+                                            <td>{{ $periode->beasiswa->nama_beasiswa }}</td>
+                                            <td>{{ $periode->tanggal_mulai->format('d M Y') }}</td>
+                                            <td>{{ $periode->tanggal_selesai->format('d M Y') }}</td>
+                                            <td>{{ $periode->kuota }}</td>
+                                            <td>
+                                                <a href="{{ route('admin.periode.show', $periode->id_periode) }}"
+                                                    class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center">Tidak ada periode aktif saat ini</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="mt-3">
-                            <a href="{{ route('admin.pengajuan.filter') }}?status=ditolak" class="text-white small">Lihat
-                                detail <i class="fas fa-arrow-right ml-1"></i></a>
+                        <div class="text-center mt-3">
+                            <a href="{{ route('admin.periode.index') }}" class="btn btn-info">Kelola Semua Periode</a>
                         </div>
                     </div>
                 </div>
@@ -110,6 +163,7 @@
                                     <tr>
                                         <th>Nama Mahasiswa</th>
                                         <th>Beasiswa</th>
+                                        <th>Periode</th>
                                         <th>Tanggal</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
@@ -120,6 +174,7 @@
                                         <tr>
                                             <td>{{ $pengajuan->mahasiswa->nama }}</td>
                                             <td>{{ $pengajuan->beasiswa->nama_beasiswa }}</td>
+                                            <td>{{ $pengajuan->periode ? $pengajuan->periode->nama_periode : 'N/A' }}</td>
                                             <td>{{ $pengajuan->tgl_pengajuan->format('d M Y') }}</td>
                                             <td>
                                                 @if ($pengajuan->status_pengajuan == 'diterima')
@@ -150,7 +205,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="5" class="text-center">Belum ada pengajuan beasiswa</td>
+                                            <td colspan="6" class="text-center">Belum ada pengajuan beasiswa</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -209,6 +264,9 @@
                                         <p class="text-gray-300">
                                             Pengajuan dari {{ $activity->mahasiswa->nama }} untuk
                                             {{ $activity->beasiswa->nama_beasiswa }}
+                                            @if($activity->periode)
+                                                ({{ $activity->periode->nama_periode }})
+                                            @endif
                                             @if ($activity->status_pengajuan == 'diterima')
                                                 telah disetujui
                                             @elseif($activity->status_pengajuan == 'ditolak')

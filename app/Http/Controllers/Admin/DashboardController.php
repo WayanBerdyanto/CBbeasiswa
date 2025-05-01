@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Pengajuan;
 use App\Models\Beasiswa;
 use App\Models\Mahasiswa;
+use App\Models\PeriodeBeasiswa;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -22,8 +23,17 @@ class DashboardController extends Controller
         $penerimaanDiproses = Pengajuan::where('status_pengajuan', 'diproses')->count();
         $penerimaanDitolak = Pengajuan::where('status_pengajuan', 'ditolak')->count();
         
+        // Period statistics
+        $totalPeriode = PeriodeBeasiswa::count();
+        $aktivePeriode = PeriodeBeasiswa::where('status', 'aktif')->count();
+        $currentPeriods = PeriodeBeasiswa::where('status', 'aktif')
+            ->where('tanggal_mulai', '<=', now())
+            ->where('tanggal_selesai', '>=', now())
+            ->with('beasiswa')
+            ->get();
+        
         // Get latest pengajuan for the table
-        $latestPengajuan = Pengajuan::with(['beasiswa', 'mahasiswa'])
+        $latestPengajuan = Pengajuan::with(['beasiswa', 'mahasiswa', 'periode'])
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
@@ -47,7 +57,7 @@ class DashboardController extends Controller
         }
         
         // Get latest activity (most recent pengajuan status updates)
-        $latestActivity = Pengajuan::with(['beasiswa', 'mahasiswa'])
+        $latestActivity = Pengajuan::with(['beasiswa', 'mahasiswa', 'periode'])
             ->orderBy('updated_at', 'desc')
             ->limit(4)
             ->get();
@@ -60,7 +70,10 @@ class DashboardController extends Controller
             'penerimaanDitolak',
             'latestPengajuan',
             'popularBeasiswa',
-            'latestActivity'
+            'latestActivity',
+            'totalPeriode',
+            'aktivePeriode',
+            'currentPeriods'
         ));
     }
 }

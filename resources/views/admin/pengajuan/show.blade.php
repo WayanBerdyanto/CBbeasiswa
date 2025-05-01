@@ -15,7 +15,7 @@
                                     <h5 class="text-light">Informasi Beasiswa</h5>
                                     <div class="p-3 rounded" style="background-color: var(--wm-light-gray); border: 1px solid rgba(255, 255, 255, 0.1);">
                                         <p class="mb-2"><strong>Nama Beasiswa:</strong> {{ $pengajuan->beasiswa->nama_beasiswa }}</p>
-                                        <p class="mb-2"><strong>Jenis:</strong> {{ $pengajuan->beasiswa->jenis }}</p>
+                                        <p class="mb-2"><strong>Jenis:</strong> {{ $pengajuan->beasiswa->jenisBeasiswa ? $pengajuan->beasiswa->jenisBeasiswa->nama_jenis : 'Tidak ada jenis' }}</p>
                                         <p class="mb-0"><strong>Deskripsi:</strong> {{ $pengajuan->beasiswa->deskripsi }}</p>
                                     </div>
                                 </div>
@@ -49,6 +49,25 @@
                                                 @endif
                                             </p>
                                             <p class="mb-2"><strong>Tanggal Pengajuan:</strong> {{ $pengajuan->tgl_pengajuan->format('d F Y') }}</p>
+                                            <p class="mb-2"><strong>IPK Mahasiswa:</strong> {{ $pengajuan->ipk }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-2"><strong>Periode:</strong> 
+                                                @if($pengajuan->periode)
+                                                    {{ $pengajuan->periode->nama_periode }}
+                                                    <span class="badge {{ $pengajuan->periode->status == 'aktif' ? 'bg-success' : 'bg-danger' }}">
+                                                        {{ $pengajuan->periode->status }}
+                                                    </span>
+                                                @else
+                                                    <span class="text-muted">Tidak ada periode</span>
+                                                @endif
+                                            </p>
+                                            @if($pengajuan->periode)
+                                                <p class="mb-2"><strong>Durasi Periode:</strong> 
+                                                    {{ $pengajuan->periode->tanggal_mulai->format('d M Y') }} - 
+                                                    {{ $pengajuan->periode->tanggal_selesai->format('d M Y') }}
+                                                </p>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="mt-3">
