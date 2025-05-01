@@ -15,7 +15,7 @@ use App\Http\Controllers\PengajuanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminPengajuanController;
 use App\Http\Controllers\Admin\AdminLaporanController;
-
+use App\Http\Controllers\Admin\AdminMahasiswaController;
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile')->middleware('auth');
 
@@ -77,6 +77,9 @@ Route::middleware(['auth:admin'])->group(function () {
 
         // Syarat management
         Route::resource('syarat', AdminSyaratBeasiswaController::class);
+
+        // Mahasiswa management
+        Route::resource('mahasiswa', AdminMahasiswaController::class);
 
         // Pengajuan filter (pindahkan ke atas route dengan parameter dinamis)
         Route::get('pengajuan/filter', [AdminPengajuanController::class, 'filter'])->name('pengajuan.filter');

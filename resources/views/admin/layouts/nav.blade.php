@@ -33,5 +33,10 @@
                 <i class="fas fa-file-alt me-2"></i> Laporan
             </a>
         </li>
+        <li class="nav-item mb-2">
+            <a href="{{ route('admin.mahasiswa.index') }}" class="nav-link {{ Request::is('admin/mahasiswa') ? 'active' : '' }}">
+                <i class="fas fa-user me-2"></i> Mahasiswa
+            </a>
+        </li>
     </ul>
 </nav>

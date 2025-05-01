@@ -23,4 +23,11 @@ class Mahasiswa extends Authenticatable
     ];
 
     protected $hidden = ['password'];
+
+    public function pengajuan()
+    {
+        return $this->hasMany(Pengajuan::class, 'id_mahasiswa', 'id');
+    }
+    
+
 }

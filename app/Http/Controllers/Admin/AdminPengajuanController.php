@@ -9,8 +9,6 @@ use App\Models\Beasiswa;
 use App\Models\Mahasiswa;
 use Illuminate\Support\Facades\DB;
 
-use function PHPUnit\Framework\isEmpty;
-
 class AdminPengajuanController extends Controller
 {
     public function index()
@@ -74,11 +72,13 @@ class AdminPengajuanController extends Controller
         return view('admin.pengajuan.index', compact('pengajuans', 'beasiswas', 'mahasiswas'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $beasiswas = Beasiswa::all();
         $mahasiswas = Mahasiswa::all();
-        return view('admin.pengajuan.create', compact('beasiswas', 'mahasiswas'));
+        $selectedMahasiswaId = $request->query('mahasiswa_id');
+        
+        return view('admin.pengajuan.create', compact('beasiswas', 'mahasiswas', 'selectedMahasiswaId'));
     }
 
     public function store(Request $request)
@@ -91,12 +91,7 @@ class AdminPengajuanController extends Controller
             'alasan_pengajuan' => 'required',
         ]);
 
-        if (isEmpty($request)) {
-            return redirect()->route('admin.pengajuan.create')->with('error', 'Data tidak boleh kosong');
-        }
-
         try {
-
             $beasiswa = Beasiswa::find($request->nama_beasiswa);
             $mahasiswa = Mahasiswa::find($request->nama_mahasiswa);
 
