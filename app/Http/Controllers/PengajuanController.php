@@ -24,12 +24,21 @@ class PengajuanController extends Controller
     public function form($id)
     {
         $user = Auth::guard('mahasiswa')->user();
-        $syarat = Syarat::where('id_beasiswa', $id)->first();
+        $beasiswa = Beasiswa::with('syarat')->findOrFail($id);
+        $syarat = Syarat::where('id_beasiswa', $id)->get();
         $periodeAktif = PeriodeBeasiswa::where('id_beasiswa', $id)
             ->where('status', 'aktif')
             ->first();
 
-        return view('beasiswa.formPengajuan', compact('user', 'syarat', 'periodeAktif'));
+        // Cek IPK minimal sebagai syarat
+        $syaratIPK = Syarat::where('id_beasiswa', $id)->first();
+            
+        if ($syaratIPK && $user->ipk_terakhir < $syaratIPK->syarat_ipk) {
+            return redirect()->route('beasiswa.index')
+                ->with('error', 'IPK Anda ('.$user->ipk_terakhir.') tidak memenuhi syarat minimal ('.$syaratIPK->syarat_ipk.')');
+        }
+
+        return view('beasiswa.formPengajuan', compact('user', 'beasiswa', 'syarat', 'periodeAktif', 'syaratIPK'));
     }
 
     // Menyimpan data pengajuan beasiswa
@@ -47,13 +56,21 @@ class PengajuanController extends Controller
         $periode = PeriodeBeasiswa::where('id_beasiswa', $request->id_beasiswa)
             ->where('status', 'aktif')
             ->first();
-            
+        
+        $syarat = Syarat::where('id_beasiswa', $request->id_beasiswa)->value('syarat_ipk');
+        $beasiswa = Beasiswa::find($request->id_beasiswa);
+        
+        if($request->ipk <= $syarat) {
+            return redirect()->route('syarat.index', $request->id_beasiswa)->with('error', 'Belum Memenuhi syarat');
+        }
+        
         // Create pengajuan
         $pengajuan = Pengajuan::create([
             'id_beasiswa' => $request->id_beasiswa,
             'id_mahasiswa' => Auth::guard('mahasiswa')->id(),
             'id_periode' => $periode ? $periode->id_periode : null,
             'status_pengajuan' => 'diproses',
+            'nominal_approved' => $beasiswa->nominal, // Menggunakan nominal default dari beasiswa
             'tgl_pengajuan' => now(),
             'alasan_pengajuan' => $request->alasan_pengajuan,
             'ipk' => $request->ipk,
@@ -157,5 +174,16 @@ class PengajuanController extends Controller
         $pengajuan->delete();
 
         return redirect()->route('pengajuan.index')->with('success', 'Pengajuan berhasil dihapus.');
+    }
+
+    // Menampilkan detail pengajuan beasiswa
+    public function detail($id)
+    {
+        $pengajuan = Pengajuan::with(['beasiswa', 'mahasiswa', 'periode', 'dokumen'])
+            ->where('id_pengajuan', $id)
+            ->where('id_mahasiswa', Auth::guard('mahasiswa')->id())
+            ->firstOrFail();
+            
+        return view('beasiswa.detailPengajuan', compact('pengajuan'));
     }
 }

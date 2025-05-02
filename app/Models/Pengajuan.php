@@ -20,6 +20,7 @@ class Pengajuan extends Model
         'id_mahasiswa',
         'id_periode',
         'status_pengajuan',
+        'nominal_approved',
         'tgl_pengajuan',
         'alasan_pengajuan',
         'ipk',

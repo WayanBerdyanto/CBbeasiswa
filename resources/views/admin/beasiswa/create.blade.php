@@ -52,11 +52,17 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="form-group mb-4">
-                                <label for="deskripsi">Deskripsi</label>
-                                <textarea name="deskripsi" class="form-control @error('deskripsi') is-invalid @enderror" 
-                                    id="deskripsi" placeholder="Masukkan deskripsi beasiswa" rows="4">{{ old('deskripsi') }}</textarea>
+                            <div class="form-group">
+                                <label for="deskripsi">Deskripsi Beasiswa</label>
+                                <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" rows="3" required>{{ old('deskripsi') }}</textarea>
                                 @error('deskripsi')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="nominal">Nominal Beasiswa (Rp)</label>
+                                <input type="number" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" value="{{ old('nominal', 0) }}" min="0" required>
+                                @error('nominal')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

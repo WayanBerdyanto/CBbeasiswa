@@ -151,8 +151,13 @@ class ReportController extends Controller
             return redirect()->route('login')->with('error', 'Anda harus login terlebih dahulu');
         }
         
-        // Get the specific application
-        $pengajuan = Pengajuan::with(['beasiswa', 'beasiswa.jenisBeasiswa', 'dokumen'])
+        // Get the specific application with all needed relationships
+        $pengajuan = Pengajuan::with([
+            'beasiswa', 
+            'beasiswa.jenisBeasiswa', 
+            'dokumen',
+            'periode'
+        ])
             ->where('id_mahasiswa', $mahasiswa->id)
             ->where('id_pengajuan', $id)
             ->firstOrFail();

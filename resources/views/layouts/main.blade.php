@@ -38,8 +38,7 @@
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="fas fa-sign-out-alt me-2"></i>Logout
                         </a>
-                        <form id="logout-form" action="{{ route('admin.logout') }}" method="POST"
-                            style="display: none;">
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>
                     </li>
@@ -110,9 +109,14 @@
                 showConfirmButton: false,
                 timer: 3000,
                 timerProgressBar: true,
-                customClass: {
-                    popup: 'colored-toast',
-                },
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: "error",
+                title: "{{ $error }}"
             });
         </script>
     @endif

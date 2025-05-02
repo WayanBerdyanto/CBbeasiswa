@@ -155,10 +155,14 @@
                                         </td>
                                         <td class="d-flex gap-2 justify-content-center action-buttons"
                                             onclick="event.stopPropagation()">
-                                            <a href="{{ route('admin.pengajuan.edit', $pengajuan->id_pengajuan) }}"
-                                                class="btn btn-sm btn-info">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ route('admin.pengajuan.show', $pengajuan->id_pengajuan) }}" class="btn btn-sm btn-info">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ route('admin.pengajuan.nominal.edit', $pengajuan->id_pengajuan) }}" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-money-bill"></i>
+                                                </a>
+                                            </div>
                                             <form action="{{ route('admin.pengajuan.destroy', $pengajuan->id_pengajuan) }}"
                                                 method="POST" class="d-inline">
                                                 @csrf

@@ -138,7 +138,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <i class="far fa-calendar-alt me-1 text-muted"></i>
+                                            <i class="far fa-calendar-alt me-1 text-light"></i>
                                             {{ $item->tgl_pengajuan->format('d M Y') }}
                                         </td>
                                         <td>
@@ -179,7 +179,7 @@
                                 </div>
                             </div>
                             <h5 class="mb-3 fw-light">Anda belum memiliki pengajuan beasiswa</h5>
-                            <p class="text-muted mb-4 fw-light">Mulai ajukan beasiswa untuk mendapatkan bantuan pendidikan</p>
+                            <p class="text-light mb-4 fw-light">Mulai ajukan beasiswa untuk mendapatkan bantuan pendidikan</p>
                             <a href="{{ route('beasiswa.index') }}" class="btn btn-primary rounded-pill px-4 fw-light">
                                 <i class="fas fa-plus-circle me-2"></i> Ajukan Beasiswa Sekarang
                             </a>

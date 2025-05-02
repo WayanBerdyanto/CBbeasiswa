@@ -34,6 +34,10 @@
                             </span>
                         </div>
                         <div class="card-body">
+                            <div>
+                                <p>Nominal : {{$b->nominal}}</p>
+                            </div>
+
                             <p class="scholarship-description">{{ $b->deskripsi }}</p>
                             
                             <div class="scholarship-meta">

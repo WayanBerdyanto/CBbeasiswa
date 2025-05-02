@@ -21,10 +21,12 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h2 class="fs-4 mb-1">{{ $pengajuan->beasiswa->nama_beasiswa }}</h2>
-                            <p class="mb-1 text-muted">
+                            <p class="mb-1 text-light">
+                                @if(isset($pengajuan->beasiswa->jenisBeasiswa) && $pengajuan->beasiswa->jenisBeasiswa)
                                 <span class="badge bg-primary bg-opacity-10 text-primary me-2">
                                     {{ $pengajuan->beasiswa->jenisBeasiswa->nama_jenis }}
                                 </span>
+                                @endif
                                 <i class="far fa-calendar-alt me-1"></i> 
                                 Diajukan pada {{ $pengajuan->tgl_pengajuan->format('d M Y') }}
                             </p>
@@ -96,7 +98,7 @@
                         </div>
                     </div>
                     
-                    @if($pengajuan->status_pengajuan == 'ditolak' && $pengajuan->alasan_penolakan)
+                    @if($pengajuan->status_pengajuan == 'ditolak' && isset($pengajuan->alasan_penolakan))
                         <div class="mt-3 p-3 bg-danger bg-opacity-10 rounded-3">
                             <h6 class="fw-bold mb-2 text-danger">Alasan Penolakan</h6>
                             <p class="mb-0">{{ $pengajuan->alasan_penolakan }}</p>
@@ -113,13 +115,19 @@
                 <div class="card-body p-4">
                     <div class="mb-4">
                         <h6 class="fw-bold mb-2">Deskripsi</h6>
-                        <p class="mb-0">{{ $pengajuan->beasiswa->deskripsi }}</p>
+                        <p class="mb-0">{{ $pengajuan->beasiswa->deskripsi ?? 'Tidak ada deskripsi' }}</p>
                     </div>
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <h6 class="fw-bold mb-2">Jenis Beasiswa</h6>
-                            <p class="mb-0">{{ $pengajuan->beasiswa->jenisBeasiswa->nama_jenis }}</p>
+                            <p class="mb-0">
+                                @if(isset($pengajuan->beasiswa->jenisBeasiswa) && $pengajuan->beasiswa->jenisBeasiswa)
+                                    {{ $pengajuan->beasiswa->jenisBeasiswa->nama_jenis }}
+                                @else
+                                    Tidak tercantum
+                                @endif
+                            </p>
                         </div>
                         
                         <div class="col-md-6 mb-3">
@@ -127,14 +135,14 @@
                             <p class="mb-0">{{ $pengajuan->beasiswa->penyelenggara ?? 'Tidak tercantum' }}</p>
                         </div>
                         
-                        @if($pengajuan->beasiswa->jumlah)
+                        @if(isset($pengajuan->beasiswa->jumlah) && $pengajuan->beasiswa->jumlah)
                         <div class="col-md-6 mb-3">
                             <h6 class="fw-bold mb-2">Jumlah Beasiswa</h6>
                             <p class="mb-0">{{ $pengajuan->beasiswa->jumlah }}</p>
                         </div>
                         @endif
                         
-                        @if($pengajuan->beasiswa->nominal)
+                        @if(isset($pengajuan->beasiswa->nominal) && $pengajuan->beasiswa->nominal)
                         <div class="col-md-6 mb-3">
                             <h6 class="fw-bold mb-2">Nominal Beasiswa</h6>
                             <p class="mb-0">Rp {{ number_format($pengajuan->beasiswa->nominal, 0, ',', '.') }}</p>
@@ -164,7 +172,7 @@
                                             </div>
                                             <div>
                                                 <h6 class="mb-0 fw-bold">{{ $dokumen->nama_dokumen }}</h6>
-                                                <small class="text-muted">
+                                                <small class="text-light">
                                                     Diupload: {{ $dokumen->created_at->format('d M Y') }}
                                                 </small>
                                             </div>
@@ -185,7 +193,7 @@
                                             <span class="badge bg-danger">Tidak Valid</span>
                                         @endif
                                         
-                                        @if($dokumen->keterangan)
+                                        @if(isset($dokumen->keterangan) && $dokumen->keterangan)
                                             <div class="mt-2 small">
                                                 <strong>Keterangan:</strong> {{ $dokumen->keterangan }}
                                             </div>
@@ -196,7 +204,7 @@
                         </ul>
                     @else
                         <div class="text-center py-5">
-                            <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                            <i class="fas fa-file-alt fa-3x text-light mb-3"></i>
                             <p class="mb-0">Belum ada dokumen terlampir</p>
                         </div>
                     @endif

@@ -27,7 +27,7 @@
                     </thead>
                     <tbody>
                         @forelse ($pengajuan as $item)
-                            <tr>
+                            <tr class="table-row clickable-row" data-href="{{ route('pengajuan.detail', $item->id_pengajuan) }}">
                                 <td>
                                     <strong>{{ $item->beasiswa->nama_beasiswa ?? '-' }}</strong>
                                 </td>
@@ -140,6 +140,16 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Handle clickable rows
+            document.querySelectorAll('.clickable-row').forEach(row => {
+                row.addEventListener('click', function(e) {
+                    // Don't handle click if user clicked on a button or link
+                    if (!e.target.closest('button') && !e.target.closest('a') && !e.target.closest('form')) {
+                        window.location.href = this.dataset.href;
+                    }
+                });
+            });
+            
             // Delete confirmation
             document.querySelectorAll('.btn-delete').forEach(button => {
                 button.addEventListener('click', function() {
@@ -168,4 +178,32 @@
             });
         });
     </script>
+@endpush
+
+@push('styles')
+<style>
+    .clickable-row {
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .clickable-row:hover {
+        background-color: rgba(30, 80, 226, 0.1);
+    }
+    
+    .badge-diterima {
+        background: linear-gradient(90deg, #1cc88a, #13855c);
+        color: white;
+    }
+    
+    .badge-ditolak {
+        background: linear-gradient(90deg, #e74a3b, #be2617);
+        color: white;
+    }
+    
+    .badge-diproses {
+        background: linear-gradient(90deg, #f6c23e, #dda20a);
+        color: white;
+    }
+</style>
 @endpush

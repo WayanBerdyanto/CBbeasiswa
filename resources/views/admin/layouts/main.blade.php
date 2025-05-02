@@ -21,14 +21,16 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <h1 class="logo-center">
-                    <i class="fas fa-graduation-cap me-2"></i><span class="d-none d-sm-inline">CBScholarships</span><span class="d-inline d-sm-none">CBS</span>
+                    <i class="fas fa-graduation-cap me-2"></i><span
+                        class="d-none d-sm-inline">CBScholarships</span><span class="d-inline d-sm-none">CBS</span>
                 </h1>
             </div>
             <!-- Dropdown User -->
             <div class="dropdown">
                 <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
                     aria-expanded="false">
-                    <i class="fas fa-user me-2"></i> <span class="d-none d-md-inline">{{ Auth::guard('admin')->user()->name }}</span>
+                    <i class="fas fa-user me-2"></i> <span
+                        class="d-none d-md-inline">{{ Auth::guard('admin')->user()->name }}</span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item" href="/profile"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
@@ -114,9 +116,14 @@
                 showConfirmButton: false,
                 timer: 3000,
                 timerProgressBar: true,
-                customClass: {
-                    popup: 'colored-toast',
-                },
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: "error",
+                title: "{{ $error }}"
             });
         </script>
     @endif
@@ -143,7 +150,7 @@
             const sidebarWrapper = document.getElementById('sidebar-wrapper');
             const content = document.querySelector('.content');
             const closeBtn = document.querySelector('.btn-close-sidebar');
-            
+
             // Check screen size and set initial state
             function checkScreen() {
                 if (window.innerWidth < 768) {
@@ -154,16 +161,16 @@
                     content.classList.remove('content-expanded');
                 }
             }
-            
+
             // Initial check
             checkScreen();
-            
+
             // Toggle sidebar on button click
             sidebarToggle.addEventListener('click', function() {
                 sidebarWrapper.classList.toggle('sidebar-active');
                 document.body.classList.toggle('sidebar-open');
             });
-            
+
             // Close sidebar when clicking the close button
             if (closeBtn) {
                 closeBtn.addEventListener('click', function() {
@@ -171,23 +178,23 @@
                     document.body.classList.remove('sidebar-open');
                 });
             }
-            
+
             // Close sidebar when clicking outside on mobile
             document.addEventListener('click', function(event) {
-                if (window.innerWidth < 768 && 
-                    sidebarWrapper.classList.contains('sidebar-active') && 
-                    !sidebarWrapper.contains(event.target) && 
+                if (window.innerWidth < 768 &&
+                    sidebarWrapper.classList.contains('sidebar-active') &&
+                    !sidebarWrapper.contains(event.target) &&
                     !sidebarToggle.contains(event.target)) {
                     sidebarWrapper.classList.remove('sidebar-active');
                     document.body.classList.remove('sidebar-open');
                 }
             });
-            
+
             // Handle resize
             window.addEventListener('resize', checkScreen);
         });
     </script>
-    
+
     @stack('scripts')
 </body>
 
