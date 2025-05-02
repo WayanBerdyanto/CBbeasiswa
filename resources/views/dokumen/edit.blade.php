@@ -42,7 +42,7 @@
                             <label for="dokumen_file" class="form-label">File Dokumen</label>
                             <input type="file" class="form-control @error('dokumen_file') is-invalid @enderror" 
                                 id="dokumen_file" name="dokumen_file">
-                            <small class="text-muted">Format yang diperbolehkan: PDF, JPG, JPEG, PNG. Ukuran maksimal: 5MB</small>
+                            <small class="text-light">Format yang diperbolehkan: PDF, JPG, JPEG, PNG. Ukuran maksimal: 5MB</small>
                             <p class="mt-2">
                                 <strong>File saat ini:</strong> 
                                 <a href="{{ route('dokumen.download', $dokumen->id_dokumen) }}" class="link-primary">

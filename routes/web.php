@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\AdminMahasiswaController;
 use App\Http\Controllers\Admin\AdminJenisBeasiswaController;
 use App\Http\Controllers\Admin\AdminSyaratController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\Admin\AdminPengajuanNominalController;
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile')->middleware('auth');
 
@@ -58,6 +59,9 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
     
     // Halaman daftar pengajuan (hanya untuk mahasiswa yang sudah login)
     Route::get('/pengajuan', [PengajuanController::class, 'daftar'])->name('pengajuan.index');
+    
+    // Detail pengajuan beasiswa
+    Route::get('/pengajuan/{id}/detail', [PengajuanController::class, 'detail'])->name('pengajuan.detail');
     
     // Hapus pengajuan
     Route::delete('/pengajuan/{id}', [PengajuanController::class, 'hapus'])->name('pengajuan.hapus');
@@ -174,6 +178,11 @@ Route::middleware(['auth:admin'])->group(function () {
         Route::put('dokumen/{id}', [AdminDokumenController::class, 'update'])->name('dokumen.update');
         Route::delete('dokumen/{id}', [AdminDokumenController::class, 'destroy'])->name('dokumen.destroy');
         Route::get('dokumen/{id}/download', [AdminDokumenController::class, 'download'])->name('dokumen.download');
+
+        // Pengajuan Nominal routes
+        Route::get('pengajuan/{id}/nominal', [AdminPengajuanNominalController::class, 'edit'])->name('pengajuan.nominal.edit');
+        Route::put('pengajuan/{id}/nominal', [AdminPengajuanNominalController::class, 'update'])->name('pengajuan.nominal.update');
+        Route::get('pengajuan/{id}/nominal/default', [AdminPengajuanNominalController::class, 'setDefault'])->name('pengajuan.nominal.default');
     });
 
 

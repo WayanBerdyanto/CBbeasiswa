@@ -10,7 +10,7 @@
             <form action="{{ route('pengajuan.simpan') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                <input type="hidden" name="id_beasiswa" value="{{ $syarat->id_beasiswa }}">
+                <input type="hidden" name="id_beasiswa" value="{{ $beasiswa->id_beasiswa }}">
 
                 <div class="mb-3">
                     <label class="form-label">Nama</label>
@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">IPK Anda (Minimal: {{ $syarat->syarat_ipk }})</label>
+                    <label class="form-label">IPK Anda (Minimal: {{ $syaratIPK->syarat_ipk }})</label>
                     <input type="number" name="ipk" class="form-control" step="0.01" min="0" max="4" value="{{ old('ipk', $user->ipk ?? '') }}" required>
                 </div>
                 
@@ -44,7 +44,7 @@
                     <div class="mb-3">
                         <label class="form-label">Upload Dokumen Persyaratan</label>
                         <input type="file" class="form-control" name="dokumen_file" required>
-                        <small class="text-muted">Format yang diperbolehkan: PDF, JPG, JPEG, PNG. Ukuran maksimal: 5MB</small>
+                        <small class="text-light">Format yang diperbolehkan: PDF, JPG, JPEG, PNG. Ukuran maksimal: 5MB</small>
                     </div>
                     
                     <div class="alert alert-info">

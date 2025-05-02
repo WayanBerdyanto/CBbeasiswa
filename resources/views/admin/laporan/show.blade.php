@@ -133,7 +133,7 @@
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">
                         Data Laporan 
-                        <small class="text-muted">{{ now()->format('d M Y H:i') }}</small>
+                        <small class="text-light">{{ now()->format('d M Y H:i') }}</small>
                     </h6>
                 </div>
                 <div class="card-body">
@@ -158,7 +158,7 @@
                                             <td>{{ $pengajuan->created_at->format('d M Y') }}</td>
                                             <td>
                                                 {{ $pengajuan->mahasiswa->nama ?? 'N/A' }}
-                                                <small class="d-block text-muted">{{ $pengajuan->mahasiswa->nim ?? '' }}</small>
+                                                <small class="d-block text-light">{{ $pengajuan->mahasiswa->nim ?? '' }}</small>
                                             </td>
                                             <td>{{ $pengajuan->beasiswa->nama_beasiswa ?? 'N/A' }}</td>
                                             <td>{{ $pengajuan->beasiswa->jenisBeasiswa->nama_jenis ?? 'N/A' }}</td>

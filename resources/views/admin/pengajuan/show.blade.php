@@ -62,6 +62,16 @@
                                             <p class="mb-2"><strong>Tanggal Pengajuan:</strong>
                                                 {{ $pengajuan->tgl_pengajuan->format('d F Y') }}</p>
                                             <p class="mb-2"><strong>IPK Mahasiswa:</strong> {{ $pengajuan->ipk }}</p>
+                                            <p class="mb-2"><strong>Nominal Beasiswa:</strong> 
+                                                @if ($pengajuan->nominal_approved)
+                                                    Rp {{ number_format($pengajuan->nominal_approved, 0, ',', '.') }}
+                                                @else
+                                                    <span class="text-light">Belum diatur</span>
+                                                @endif
+                                                <a href="{{ route('admin.pengajuan.nominal.edit', $pengajuan->id_pengajuan) }}" class="btn btn-sm btn-primary ms-2">
+                                                    <i class="fas fa-edit"></i> Atur Nominal
+                                                </a>
+                                            </p>
                                         </div>
                                         <div class="col-md-6">
                                             <p class="mb-2"><strong>Periode:</strong>
@@ -72,7 +82,7 @@
                                                         {{ $pengajuan->periode->status }}
                                                     </span>
                                                 @else
-                                                    <span class="text-muted">Tidak ada periode</span>
+                                                    <span class="text-light">Tidak ada periode</span>
                                                 @endif
                                             </p>
                                             @if ($pengajuan->periode)

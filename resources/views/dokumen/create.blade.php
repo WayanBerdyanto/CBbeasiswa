@@ -13,6 +13,10 @@
                         @csrf
                         <input type="hidden" name="id_pengajuan" value="{{ $pengajuan->id_pengajuan }}">
                         
+                        @if(str_contains(url()->previous(), 'detail'))
+                            <input type="hidden" name="redirect_to_detail" value="1">
+                        @endif
+                        
                         <div class="mb-3">
                             <p><strong>Pengajuan Beasiswa:</strong> {{ $pengajuan->beasiswa->nama_beasiswa }}</p>
                             <p><strong>Tanggal Pengajuan:</strong> {{ $pengajuan->tgl_pengajuan->format('d/m/Y') }}</p>
@@ -33,7 +37,7 @@
                             <label for="dokumen_file" class="form-label">File Dokumen</label>
                             <input type="file" class="form-control @error('dokumen_file') is-invalid @enderror" 
                                 id="dokumen_file" name="dokumen_file" required>
-                            <small class="text-muted">Format yang diperbolehkan: PDF, JPG, JPEG, PNG. Ukuran maksimal: 5MB</small>
+                            <small class="text-light">Format yang diperbolehkan: PDF, JPG, JPEG, PNG. Ukuran maksimal: 5MB</small>
                             @error('dokumen_file')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -42,11 +46,17 @@
                         </div>
                         
                         <div class="d-flex justify-content-between mt-4">
-                            <a href="{{ route('pengajuan.index') }}" class="btn btn-secondary">
-                                <i class="bi bi-arrow-left"></i> Kembali
-                            </a>
+                            @if(str_contains(url()->previous(), 'detail'))
+                                <a href="{{ route('pengajuan.detail', $pengajuan->id_pengajuan) }}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i> Kembali ke Detail
+                                </a>
+                            @else
+                                <a href="{{ route('pengajuan.index') }}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i> Kembali
+                                </a>
+                            @endif
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-upload"></i> Unggah Dokumen
+                                <i class="fas fa-upload me-2"></i> Unggah Dokumen
                             </button>
                         </div>
                     </form>

@@ -47,11 +47,16 @@ class DokumenController extends Controller
             'status_verifikasi' => 'belum_diverifikasi',
         ]);
         
-        // Redirect based on guard
+        // Redirect based on guard or redirect source
         if (Auth::guard('admin')->check()) {
             return redirect()->route('admin.pengajuan.show', $request->id_pengajuan)
                 ->with('success', 'Dokumen berhasil diunggah.');
         } else {
+            // Check if request has a 'redirect_to_detail' parameter
+            if ($request->has('redirect_to_detail')) {
+                return redirect()->route('pengajuan.detail', $request->id_pengajuan)
+                    ->with('success', 'Dokumen berhasil diunggah.');
+            }
             return redirect()->route('pengajuan.index')
                 ->with('success', 'Dokumen berhasil diunggah.');
         }
@@ -96,11 +101,16 @@ class DokumenController extends Controller
         $dokumen->nama_dokumen = $request->nama_dokumen;
         $dokumen->save();
         
-        // Redirect based on guard
+        // Redirect based on guard or redirect source
         if (Auth::guard('admin')->check()) {
             return redirect()->route('admin.pengajuan.show', $dokumen->id_pengajuan)
                 ->with('success', 'Dokumen berhasil diperbarui.');
         } else {
+            // Check if request has a 'redirect_to_detail' parameter
+            if ($request->has('redirect_to_detail')) {
+                return redirect()->route('pengajuan.detail', $dokumen->id_pengajuan)
+                    ->with('success', 'Dokumen berhasil diperbarui.');
+            }
             return redirect()->route('pengajuan.index')
                 ->with('success', 'Dokumen berhasil diperbarui.');
         }
@@ -118,11 +128,17 @@ class DokumenController extends Controller
         
         $dokumen->delete();
         
-        // Redirect based on guard
+        // Redirect based on guard or HTTP referrer
         if (Auth::guard('admin')->check()) {
             return redirect()->route('admin.pengajuan.show', $pengajuanId)
                 ->with('success', 'Dokumen berhasil dihapus.');
         } else {
+            // Check if the referrer contains 'detail' in the URL
+            $referer = request()->headers->get('referer');
+            if ($referer && strpos($referer, 'detail') !== false) {
+                return redirect()->route('pengajuan.detail', $pengajuanId)
+                    ->with('success', 'Dokumen berhasil dihapus.');
+            }
             return redirect()->route('pengajuan.index')
                 ->with('success', 'Dokumen berhasil dihapus.');
         }

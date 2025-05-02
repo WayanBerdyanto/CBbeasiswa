@@ -11,7 +11,7 @@
                 <div class="card-body">
                     <div class="mb-4">
                         <h4>{{ $dokumen->nama_dokumen }}</h4>
-                        <p class="text-muted mb-0">
+                        <p class="text-light mb-0">
                             Diunggah pada: {{ $dokumen->created_at->format('d M Y, H:i') }}
                         </p>
                     </div>

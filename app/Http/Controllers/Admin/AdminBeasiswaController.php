@@ -44,6 +44,7 @@ class AdminBeasiswaController extends Controller
                 'nama_beasiswa' => 'required',
                 'id_jenis' => 'required|exists:jenis_beasiswa,id_jenis',
                 'deskripsi' => 'required',
+                'nominal' => 'required|numeric|min:0',
             ]);
 
             Beasiswa::create($request->all());
@@ -99,6 +100,7 @@ class AdminBeasiswaController extends Controller
                 'nama_beasiswa' => 'required',
                 'id_jenis' => 'required|exists:jenis_beasiswa,id_jenis',
                 'deskripsi' => 'required',
+                'nominal' => 'required|numeric|min:0',
             ]);
 
             Beasiswa::find($id)->update($request->all());
