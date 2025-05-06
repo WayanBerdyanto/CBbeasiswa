@@ -93,7 +93,7 @@
 
                         <div class="col-md-6 mb-3">
                             <h6 class="fw-bold mb-2">Semester Mahasiswa</h6>
-                            <p class="mb-0">{{ $pengajuan->mahasiswa ->semester }}</p>
+                            <p class="mb-0">{{ $pengajuan->mahasiswa->semester }}</p>
                         </div>
                         
                         <div class="col-md-6 mb-3">

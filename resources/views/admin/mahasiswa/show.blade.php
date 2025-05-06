@@ -44,6 +44,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <h6 class="text-white">Semester:</h6>
+                        <p class="text-gray-300">{{ $mahasiswa->semester }}</p>
+                    </div>
+
+                    <div class="mb-3">
                         <h6 class="text-white">Jenis Kelamin:</h6>
                         <p class="text-gray-300">{{ $mahasiswa->gender }}</p>
                     </div>
