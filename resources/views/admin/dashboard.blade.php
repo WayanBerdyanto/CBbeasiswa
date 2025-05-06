@@ -264,7 +264,7 @@
                                         <p class="text-gray-300">
                                             Pengajuan dari {{ $activity->mahasiswa->nama }} untuk
                                             {{ $activity->beasiswa->nama_beasiswa }}
-                                            @if($activity->periode)
+                                            @if ($activity->periode)
                                                 ({{ $activity->periode->nama_periode }})
                                             @endif
                                             @if ($activity->status_pengajuan == 'diterima')
