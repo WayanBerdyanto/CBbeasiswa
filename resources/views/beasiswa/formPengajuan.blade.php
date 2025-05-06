@@ -24,9 +24,13 @@
 
                 <div class="mb-3">
                     <label class="form-label">IPK Anda (Minimal: {{ $syaratIPK->syarat_ipk }})</label>
-                    <input type="number" name="ipk" class="form-control" step="0.01" min="0" max="4" value="{{ old('ipk', $user->ipk ?? '') }}" required>
+                    <input type="number" name="ipk" class="form-control" step="0.01" min="0" max="4" value="{{ old('ipk', $user->ipk_terakhir ?? '') }}"required>
                 </div>
                 
+                <div class="mb-3">
+                    <label class="form-label">Semester </label>
+                    <input type="text" name="semester" class="form-control"  value="{{ old('ipk', $user->semester ?? '') }}"required>
+                </div>
 
                 <div class="mb-3">
                     <label class="form-label">Alasan Pengajuan</label>

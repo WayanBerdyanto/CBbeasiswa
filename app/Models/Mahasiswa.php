@@ -27,6 +27,7 @@ class Mahasiswa extends Authenticatable
         'total_received_scholarship',
         'email',
         'password',
+        'semester',
     ];
 
     protected $hidden = [
