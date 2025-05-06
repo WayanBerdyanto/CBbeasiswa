@@ -141,6 +141,32 @@
             transition: all 0.3s ease;
         }
 
+
+        input,
+        select,
+        textarea {
+            color: var(--wm-white) !important;
+        }
+
+        ::placeholder {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        select option {
+            background-color: var(--wm-gray);
+            color: var(--wm-white);
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
         .form-control:focus {
             background-color: rgba(255, 255, 255, 0.1);
             border-color: var(--wm-blue);
