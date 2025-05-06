@@ -33,7 +33,8 @@
                                         <p class="mb-2"><strong>Nama:</strong> {{ $pengajuan->mahasiswa->nama }}</p>
                                         <p class="mb-2"><strong>NIM:</strong> {{ $pengajuan->mahasiswa->nim }}</p>
                                         <p class="mb-2"><strong>Jurusan:</strong> {{ $pengajuan->mahasiswa->jurusan }}</p>
-                                        <p class="mb-0"><strong>Angkatan:</strong> {{ $pengajuan->mahasiswa->angkatan }}
+                                        <p class="mb-2"><strong>Angkatan:</strong> {{ $pengajuan->mahasiswa->angkatan }}
+                                        <p class="mb-0"><strong>Angkatan:</strong> {{ $pengajuan->mahasiswa->semester }}
                                         </p>
                                     </div>
                                 </div>

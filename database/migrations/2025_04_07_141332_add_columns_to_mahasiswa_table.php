@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('no_hp', 15)->nullable()->after('gender');
             $table->text('alamat')->nullable()->after('no_hp');
             $table->decimal('ipk_terakhir', 3, 2)->default(0.00)->after('alamat');
+            $table->string('semester', 50)->nullable();
         });
     }
 

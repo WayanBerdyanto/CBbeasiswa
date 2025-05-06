@@ -16,8 +16,12 @@
             <div class="col-lg-8">
                 <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
                     <!-- Card Header with Gradient Background -->
-                    <div class="card-header bg-gradient-primary text-white py-3">
+                    <div class="d-flex align-items-center justify-content-between card-header bg-gradient-primary text-white py-3">
                         <h4 class="mb-0"><i class="fas fa-user-circle me-2"></i>Informasi Pribadi</h4>
+
+                        <div class="d-flex justify-content-end gap-3 mt-2">
+                            <a href="{{route('profile.edit')}}" class="btn btn-success">Ubah Profile</a>
+                        </div>
                     </div>
 
                     <div class="card-body p-4">
@@ -45,12 +49,17 @@
                                     <span class="ms-2">{{ $mahasiswa->jurusan }}</span>
                                 </p>
 
-                                <p class="text-secondary d-flex align-items-center">
+                                <p class="text-secondary mb-2 d-flex align-items-center">
                                     <i class="fas fa-calendar-alt me-2 text-warning"></i>
                                     <span class="fw-semibold">Angkatan:</span>
                                     <span class="ms-2">{{ $mahasiswa->angkatan }}</span>
                                 </p>
 
+                                <p class="text-secondary d-flex align-items-center">
+                                    <i class="fas fa-user-alt me-2 text-info"></i>
+                                    <span class="fw-semibold">Semester:</span>
+                                    <span class="ms-2">{{ $mahasiswa->semester }}</span>
+                                </p>
 
                                 <!-- Status Badge -->
                                 <div class="mt-3">

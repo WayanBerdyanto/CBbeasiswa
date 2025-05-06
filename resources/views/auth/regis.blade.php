@@ -155,6 +155,31 @@
             box-sizing: border-box;
         }
 
+        input,
+        select,
+        textarea {
+            color: var(--wm-white) !important;
+        }
+
+        ::placeholder {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        select option {
+            background-color: var(--wm-gray);
+            color: var(--wm-white);
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
         .form-control:focus {
             background-color: rgba(255, 255, 255, 0.1);
             border-color: var(--wm-pink);
@@ -370,6 +395,9 @@
 
         <h2 class="register-title">Buat Akun Baru</h2>
 
+        <div class="alert alert-info">
+            <small>Email akan dibuat otomatis dari NIM: "nim@students.ukdw.ac.id"</small>
+        </div>
         @if ($errors->any())
             <div class="alert alert-danger mb-4">
                 <ul class="mb-0">
@@ -402,20 +430,27 @@
             </div>
 
             <div class="form-row">
-                <div class="form-col">
-                    <div class="form-group">
-                        <label for="jurusan">Jurusan</label>
-                        <input type="text" id="jurusan" name="jurusan" class="form-control" placeholder="Masukkan jurusan"
-                            required>
-                        <i class="fas fa-graduation-cap input-icon"></i>
-                    </div>
-                </div>
+
                 <div class="form-col">
                     <div class="form-group">
                         <label for="fakultas">Fakultas</label>
-                        <input type="text" id="fakultas" name="fakultas" class="form-control" placeholder="Masukkan fakultas"
-                            required>
+                        <select id="fakultas" name="fakultas" class="form-control">
+                            <option value="">-- Pilih Fakultas --</option>
+                            @foreach ($grupJurusan as $fakultas => $jurusan)
+                                <option value="{{ $fakultas }}">{{ $fakultas }}</option>
+                            @endforeach
+                        </select>
                         <i class="fas fa-university input-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="jurusan">Jurusan</label>
+                        <select id="jurusan" class="form-control" name="jurusan" required>
+                            <option value="">-- Pilih Jurusan --</option>
+                        </select>
+                        <i class="fas fa-graduation-cap input-icon"></i>
                     </div>
                 </div>
             </div>
@@ -454,46 +489,48 @@
                 <div class="form-col">
                     <div class="form-group">
                         <label for="ipk_terakhir">IPK Terakhir</label>
-                        <input type="number" id="ipk_terakhir" name="ipk_terakhir" class="form-control" step="0.01" min="0" max="4.00"
+                        <input type="number" id="ipk_terakhir" name="ipk_terakhir" class="form-control"
+                            step="0.01" min="0" max="4.00"
                             placeholder="Masukkan IPK terakhir (opsional)">
                         <i class="fas fa-star input-icon"></i>
                     </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="alamat">Alamat</label>
-                <textarea id="alamat" name="alamat" class="form-control" placeholder="Masukkan alamat (opsional)" rows="2"></textarea>
-                <i class="fas fa-map-marker-alt input-icon"></i>
-            </div>
-
             <div class="form-row">
                 <div class="form-col">
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" class="form-control"
-                            placeholder="Masukkan email Anda" required>
-                        <i class="fas fa-envelope input-icon"></i>
-                    </div>
-                </div>
-                <div class="form-col">
-                    <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" name="password" class="form-control" placeholder="Buat password"
-                            required>
+                        <input type="password" id="password" name="password" class="form-control"
+                            placeholder="Buat password" required>
                         <i class="fas fa-lock input-icon"></i>
                         <div class="password-strength">
                             <div class="strength-meter" id="strength-meter"></div>
                         </div>
                     </div>
                 </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="password_confirmation">Konfirmasi Password</label>
+                        <input type="password" id="password_confirmation" name="password_confirmation"
+                            class="form-control" placeholder="Ulangi password" required>
+                        <i class="fas fa-lock input-icon"></i>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="semester">semester</label>
+                <input type="number" id="semester" name="semester" class="form-control" placeholder="Masukkan semester"  required>
+                <i class="fas fa-calendar input-icon"></i>
             </div>
 
             <div class="form-group">
-                <label for="password_confirmation">Konfirmasi Password</label>
-                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control"
-                    placeholder="Ulangi password" required>
-                <i class="fas fa-lock input-icon"></i>
+                <label for="alamat">Alamat</label>
+                <textarea id="alamat" name="alamat" class="form-control" placeholder="Masukkan alamat (opsional)"
+                    rows="2"></textarea>
+                <i class="fas fa-map-marker-alt input-icon"></i>
             </div>
 
             <div class="form-group">
@@ -514,6 +551,35 @@
             Sudah punya akun? <a href="/login">Masuk disini</a>
         </div>
     </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#fakultas').change(function() {
+                var fakultas = $(this).val();
+                var $jurusan = $('#jurusan');
+
+                $jurusan.empty().append('<option value="">-- Pilih Jurusan --</option>').prop('disabled',
+                    true);
+
+                if (fakultas) {
+                    var jurusanList = @json($grupJurusan);
+                    if (jurusanList[fakultas] && jurusanList[fakultas].length) {
+                        $jurusan.prop('disabled', false);
+                        $.each(jurusanList[fakultas], function(i, item) {
+                            $jurusan.append($('<option>', {
+                                value: item,
+                                text: item
+                            }));
+                        });
+                    }
+                }
+            });
+        });
+    </script>
 
     <script>
         // Add focus effects
@@ -573,7 +639,7 @@
             const submitBtn = document.querySelector('.btn-register');
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> MENDAFTAR...';
             submitBtn.disabled = true;
-            
+
             // Let the form submit normally
         });
 
@@ -589,7 +655,7 @@
 
         // Run on page load
         adjustLayout();
-        
+
         // Run on resize
         window.addEventListener('resize', adjustLayout);
     </script>

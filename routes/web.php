@@ -71,6 +71,14 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
     Route::get('/report/export-pdf', [ReportController::class, 'exportPdf'])->name('report.export.pdf');
     Route::get('/report/view-pdf', [ReportController::class, 'viewPdf'])->name('report.view.pdf');
     Route::get('/report/pengajuan/{id}', [ReportController::class, 'detailPengajuan'])->name('report.pengajuan.detail');
+
+    // Update profile
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Update password
+    Route::get('/profile/edit-password', [ProfileController::class, 'editPassword'])->name('profile.edit.password');
+    Route::patch('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.update.password');
 });
 
 // ------------------- BEASISWA DAN SYARAT (Publik) -------------------
