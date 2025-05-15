@@ -28,7 +28,7 @@
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item" href="/profile"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
 
-                    <li><a class="dropdown-item" href="/user"><i class="fas fa-key me-2"></i>Change
+                    <li><a class="dropdown-item" href="{{ route('profile.edit.password')}}"><i class="fas fa-key me-2"></i>Change
                             Password</a></li>
                     <li>
                         <hr class="dropdown-divider">

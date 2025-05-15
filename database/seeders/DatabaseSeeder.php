@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
             JenisBeasiswaSeeder::class,
             BeasiswaSeeder::class,
             SyaratSeeder::class,
+            PeriodeBeasiswaSeeder::class,
+            PengajuanSeeder::class,
+            DokumenSeeder::class,
         ]);
     }
 }

@@ -39,10 +39,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($beasiswas as $beasiswa)
+                                @forelse ($beasiswas as $idx => $beasiswa)
                                     <tr class="cursor-pointer hover-pointer"
                                         onclick="window.location.href='{{ route('admin.beasiswa.show', $beasiswa->id_beasiswa) }}'">
-                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $beasiswas->firstItem() + $idx }}</td>
                                         <td>{{ $beasiswa->nama_beasiswa }}</td>
                                         <td>{{ $beasiswa->jenisBeasiswa ? $beasiswa->jenisBeasiswa->nama_jenis : 'Tidak ada jenis' }}</td>
                                         <td>{{ \Illuminate\Support\Str::limit($beasiswa->deskripsi, 50) }}</td>

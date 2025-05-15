@@ -56,10 +56,12 @@
                             </div>
                             <div class="form-group mb-3">
                                 <label for="nama_mahasiswa">Nama Mahasiswa</label>
-                                <select name="nama_mahasiswa" class="form-control @error('nama_mahasiswa') is-invalid @enderror">
+                                <select name="nama_mahasiswa" id="nama_mahasiswa" class="form-control @error('nama_mahasiswa') is-invalid @enderror">
                                     <option value="">Pilih Mahasiswa</option>
                                     @foreach ($mahasiswas as $mahasiswa)
-                                        <option value="{{ $mahasiswa->id }}" {{ isset($selectedMahasiswaId) && $selectedMahasiswaId == $mahasiswa->id ? 'selected' : '' }}>
+                                        <option value="{{ $mahasiswa->id }}" 
+                                            data-ipk="{{ $mahasiswa->ipk_terakhir }}"
+                                            {{ isset($selectedMahasiswaId) && $selectedMahasiswaId == $mahasiswa->id ? 'selected' : '' }}>
                                             {{ $mahasiswa->nama }} ({{ $mahasiswa->nim }})
                                         </option>
                                     @endforeach
@@ -70,7 +72,8 @@
                             </div>
                             <div class="form-group mb-3">
                                 <label for="ipk">IPK Mahasiswa</label>
-                                <input type="number" step="0.01" min="0" max="4.00" name="ipk" class="form-control @error('ipk') is-invalid @enderror" placeholder="Contoh: 3.50" required>
+                                <input type="number" step="0.01" min="0" max="4.00" id="ipk" name="ipk" class="form-control @error('ipk') is-invalid @enderror" placeholder="Contoh: 3.50" required>
+                                <small class="form-text text-light">IPK akan diisi otomatis berdasarkan data mahasiswa yang dipilih.</small>
                                 @error('ipk')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -120,6 +123,23 @@
     document.addEventListener('DOMContentLoaded', function() {
         const beasiswaSelect = document.getElementById('nama_beasiswa');
         const periodeOptions = document.querySelectorAll('.periode-option');
+        const mahasiswaSelect = document.getElementById('nama_mahasiswa');
+        const ipkInput = document.getElementById('ipk');
+        
+        // Auto-fill IPK when mahasiswa is selected
+        mahasiswaSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.value) {
+                const ipkTerakhir = selectedOption.getAttribute('data-ipk');
+                if (ipkTerakhir) {
+                    ipkInput.value = ipkTerakhir;
+                } else {
+                    ipkInput.value = '';
+                }
+            } else {
+                ipkInput.value = '';
+            }
+        });
         
         // Filter periode options based on selected beasiswa
         beasiswaSelect.addEventListener('change', function() {

@@ -39,10 +39,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($periodes as $periode)
+                                @forelse ($periodes as $idx => $periode)
                                     <tr class="cursor-pointer hover-pointer"
                                         onclick="window.location.href='{{ route('admin.periode.show', $periode->id_periode) }}'">
-                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $periodes->firstItem() + $idx }}</td>
                                         <td>{{ $periode->nama_periode }}</td>
                                         <td>{{ $periode->beasiswa ? $periode->beasiswa->nama_beasiswa : 'Tidak ada beasiswa' }}</td>
                                         <td>{{ $periode->tanggal_mulai->format('d M Y') }}</td>
