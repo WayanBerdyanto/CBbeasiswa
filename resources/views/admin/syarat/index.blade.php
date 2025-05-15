@@ -25,10 +25,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($syarat as $item)
+                                @forelse($syarat as $idx => $item)
                                     <tr class="cursor-pointer hover-pointer"
                                         onclick="window.location.href='{{ route('admin.syarat.show', $item->id_syarat) }}'">
-                                        <td>{{ ($syarat->currentPage() - 1) * $syarat->perPage() + $loop->iteration }}</td>
+                                        <td>{{ $syarat->firstItem() + $idx }}</td>
                                         <td>{{ $item->beasiswa->nama_beasiswa }}</td>
                                         <td>{{ $item->syarat_ipk }}</td>
                                         <td>{{ $item->syarat_dokumen }}</td>

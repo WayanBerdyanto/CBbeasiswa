@@ -14,6 +14,8 @@ class PeriodeBeasiswa extends Model
     protected $fillable = [
         'id_beasiswa',
         'nama_periode',
+        'tipe_semester',
+        'semester_syarat',
         'tanggal_mulai',
         'tanggal_selesai',
         'status',

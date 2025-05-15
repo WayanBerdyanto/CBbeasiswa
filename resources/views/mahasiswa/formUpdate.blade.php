@@ -94,7 +94,11 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Ipk Terakhir </label>
                                     <input type="number" name="ipk_terakhir" class="form-control"
-                                        value="{{ old('ipk_terakhir', $mahasiswa->ipk_terakhir ?? '') }}"required>
+                                        step="0.01" min="0" max="4.00"
+                                        value="{{ old('ipk_terakhir', $mahasiswa->ipk_terakhir ?? '') }}" required>
+                                    @error('ipk_terakhir')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 

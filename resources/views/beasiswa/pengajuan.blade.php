@@ -21,6 +21,7 @@
                             <th>Alasan Pengajuan</th>
                             <th>Tanggal</th>
                             <th>Status</th>
+                            <th>Nominal</th>
                             <th>Dokumen</th>
                             <th>Aksi</th>
                         </tr>
@@ -53,6 +54,20 @@
                                         <span class="badge badge-diproses">
                                             <i class="fas fa-hourglass-half"></i> Diproses
                                         </span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($item->status_pengajuan == 'diterima')
+                                        <span class="badge bg-success">
+                                            Rp {{ number_format($item->nominal_approved, 0, ',', '.') }}
+                                        </span>
+                                    @elseif ($item->status_pengajuan == 'diproses')
+                                        <span class="badge bg-light text-dark">
+                                            Rp {{ number_format($item->beasiswa->nominal, 0, ',', '.') }}
+                                            <small>(Default)</small>
+                                        </span>
+                                    @else
+                                        <span class="badge bg-secondary">-</span>
                                     @endif
                                 </td>
                                 <td>

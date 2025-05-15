@@ -15,7 +15,9 @@ class AdminPengajuanController extends Controller
 {
     public function index()
     {
-        $pengajuans = Pengajuan::with(['beasiswa.jenisBeasiswa', 'mahasiswa', 'periode'])->paginate(10);
+        $pengajuans = Pengajuan::with(['beasiswa.jenisBeasiswa', 'mahasiswa', 'periode'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
         return view('admin.pengajuan.index', compact('pengajuans'));
     }
 
@@ -106,20 +108,41 @@ class AdminPengajuanController extends Controller
             $beasiswa = Beasiswa::find($request->nama_beasiswa);
             $mahasiswa = Mahasiswa::find($request->nama_mahasiswa);
 
+            // Jika IPK kosong atau tidak valid, gunakan IPK terakhir mahasiswa
+            $ipk = $request->ipk;
+            if (!$ipk || $ipk <= 0 || $ipk > 4.00) {
+                $ipk = $mahasiswa->ipk_terakhir ?? 0;
+            }
+
             DB::beginTransaction();
             $pengajuan = new Pengajuan();
             $pengajuan->id_beasiswa = $beasiswa->id_beasiswa;
             $pengajuan->id_mahasiswa = $mahasiswa->id;
             $pengajuan->id_periode = $request->id_periode;
             $pengajuan->status_pengajuan = $request->status_pengajuan;
+            $pengajuan->nominal_approved = $beasiswa->nominal; // Set default nominal dari beasiswa
             $pengajuan->tgl_pengajuan = $request->tgl_pengajuan;
             $pengajuan->alasan_pengajuan = $request->alasan_pengajuan;
-            $pengajuan->ipk = $request->ipk;
+            $pengajuan->ipk = $ipk;
             $pengajuan->save();
+            
+            // Log untuk debugging
+            \Illuminate\Support\Facades\Log::info('Admin: New pengajuan created', [
+                'id_pengajuan' => $pengajuan->id_pengajuan,
+                'id_beasiswa' => $pengajuan->id_beasiswa,
+                'nominal_approved' => $pengajuan->nominal_approved,
+                'ipk' => $pengajuan->ipk,
+                'ipk_mahasiswa' => $mahasiswa->ipk_terakhir
+            ]);
+            
             DB::commit();
             return redirect()->route('admin.pengajuan.index')->with('success', 'Pengajuan berhasil ditambahkan');
         } catch (\Exception $e) {
             DB::rollBack();
+            \Illuminate\Support\Facades\Log::error('Admin: Error creating pengajuan', [
+                'error' => $e->getMessage(),
+                'request' => $request->all()
+            ]);
             return redirect()->route('admin.pengajuan.create')->with('error', 'Gagal menambahkan pengajuan: ' . $e->getMessage());
         }
     }
@@ -151,21 +174,51 @@ class AdminPengajuanController extends Controller
             if (!$pengajuan) {
                 return redirect()->route('admin.pengajuan.index')->with('error', 'Pengajuan tidak ditemukan');
             }
+            
+            $beasiswa = Beasiswa::find($request->nama_beasiswa);
+            $mahasiswa = Mahasiswa::find($request->nama_mahasiswa);
+            
+            // Jika IPK kosong atau tidak valid, gunakan IPK terakhir mahasiswa
+            $ipk = $request->ipk;
+            if (!$ipk || $ipk <= 0 || $ipk > 4.00) {
+                $ipk = $mahasiswa->ipk_terakhir ?? 0;
+            }
 
             DB::beginTransaction();
             $pengajuan->id_beasiswa = $request->nama_beasiswa;
             $pengajuan->id_mahasiswa = $request->nama_mahasiswa;
             $pengajuan->id_periode = $request->id_periode;
             $pengajuan->status_pengajuan = $request->status_pengajuan;
+            
+            // Jika beasiswa berubah, update nominal_approved ke default beasiswa baru
+            if ($pengajuan->getOriginal('id_beasiswa') != $request->nama_beasiswa) {
+                $pengajuan->nominal_approved = $beasiswa->nominal;
+            }
+            
             $pengajuan->tgl_pengajuan = $request->tgl_pengajuan;
             $pengajuan->alasan_pengajuan = $request->alasan_pengajuan;
-            $pengajuan->ipk = $request->ipk;
+            $pengajuan->ipk = $ipk;
             $pengajuan->save();
+            
+            // Log untuk debugging
+            \Illuminate\Support\Facades\Log::info('Admin: Pengajuan updated', [
+                'id_pengajuan' => $pengajuan->id_pengajuan,
+                'id_beasiswa' => $pengajuan->id_beasiswa,
+                'nominal_approved' => $pengajuan->nominal_approved,
+                'ipk' => $pengajuan->ipk,
+                'ipk_mahasiswa' => $mahasiswa->ipk_terakhir
+            ]);
+            
             DB::commit();
 
             return redirect()->route('admin.pengajuan.index')->with('success', 'Pengajuan berhasil diperbarui');
         } catch (\Exception $e) {
             DB::rollBack();
+            \Illuminate\Support\Facades\Log::error('Admin: Error updating pengajuan', [
+                'id' => $id,
+                'error' => $e->getMessage(),
+                'request' => $request->all()
+            ]);
             return redirect()->route('admin.pengajuan.edit', $id)->with('error', 'Gagal memperbarui pengajuan: ' . $e->getMessage());
         }
     }

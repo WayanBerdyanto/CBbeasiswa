@@ -128,10 +128,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($pengajuans as $pengajuan)
+                                @forelse($pengajuans as $idx => $pengajuan)
                                     <tr class="cursor-pointer hover-pointer"
                                         onclick="window.location.href='{{ route('admin.pengajuan.show', $pengajuan->id_pengajuan) }}'">
-                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $pengajuans->firstItem() + $idx }}</td>
                                         <td>{{ $pengajuan->beasiswa->nama_beasiswa }}</td>
                                         <td>{{ $pengajuan->mahasiswa->nama }}</td>
                                         <td>

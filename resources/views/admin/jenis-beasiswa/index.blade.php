@@ -36,10 +36,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($jenisBeasiswas as $jenis)
+                                @forelse ($jenisBeasiswas as $idx => $jenis)
                                     <tr class="cursor-pointer hover-pointer"
                                         onclick="window.location.href='{{ route('admin.jenis-beasiswa.show', $jenis->id_jenis) }}'">
-                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $jenisBeasiswas->firstItem() + $idx }}</td>
                                         <td>{{ $jenis->nama_jenis }}</td>
                                         <td>{{ \Illuminate\Support\Str::limit($jenis->deskripsi, 50) }}</td>
                                         <td>{{ $jenis->beasiswas_count }}</td>

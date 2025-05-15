@@ -56,6 +56,22 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
+                                        <label for="tipe_semester" class="form-label">Tipe Semester</label>
+                                        <select name="tipe_semester" id="tipe_semester"
+                                            class="form-control @error('tipe_semester') is-invalid @enderror" required>
+                                            <option value="semua" {{ old('tipe_semester') == 'semua' ? 'selected' : '' }}>Semua Semester</option>
+                                            <option value="ganjil" {{ old('tipe_semester') == 'ganjil' ? 'selected' : '' }}>Semester Ganjil</option>
+                                            <option value="genap" {{ old('tipe_semester') == 'genap' ? 'selected' : '' }}>Semester Genap</option>
+                                        </select>
+                                        @error('tipe_semester')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
                                         <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
                                         <input type="date" name="tanggal_mulai" id="tanggal_mulai"
                                             class="form-control @error('tanggal_mulai') is-invalid @enderror"
@@ -67,6 +83,9 @@
                                         @enderror
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
@@ -80,9 +99,6 @@
                                         @enderror
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label for="kuota" class="form-label">Kuota</label>
@@ -96,6 +112,9 @@
                                         @enderror
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label for="status" class="form-label">Status</label>
@@ -107,6 +126,20 @@
                                                 {{ old('status') == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
                                         </select>
                                         @error('status')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="semester_syarat" class="form-label">Syarat Semester</label>
+                                        <input type="text" name="semester_syarat" id="semester_syarat"
+                                            class="form-control @error('semester_syarat') is-invalid @enderror"
+                                            value="{{ old('semester_syarat') }}" placeholder="Contoh: 1,3,5 (kosongkan jika tidak ada syarat)">
+                                        <small class="form-text text-light">Masukkan semester yang diperbolehkan, pisahkan dengan koma. Kosongkan jika tidak ada syarat semester.</small>
+                                        @error('semester_syarat')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>

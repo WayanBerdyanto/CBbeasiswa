@@ -29,7 +29,7 @@
                                 @forelse($mahasiswas as $index => $mahasiswa)
                                     <tr class="cursor-pointer hover-pointer"
                                         onclick="window.location.href='{{ route('admin.mahasiswa.show', $mahasiswa->id) }}'">
-                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{  $mahasiswas->firstItem() + $index }}</td>
                                         <td>{{ $mahasiswa->nama }}</td>
                                         <td>{{ $mahasiswa->nim }}</td>
                                         <td>{{ $mahasiswa->fakultas }}</td>

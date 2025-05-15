@@ -160,6 +160,45 @@
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!-- Informasi Semester -->
+                                @if($periode)
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="detail-icon" style="width: 40px; height: 40px; font-size: 1.2rem;">
+                                            <i class="fas fa-university"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1 text-light">Tipe Semester</h6>
+                                            <p class="mb-0">
+                                                @if($periode->tipe_semester == 'ganjil')
+                                                    <span class="badge bg-info">Khusus Semester Ganjil</span>
+                                                @elseif($periode->tipe_semester == 'genap')
+                                                    <span class="badge bg-primary">Khusus Semester Genap</span>
+                                                @else
+                                                    <span class="badge bg-secondary">Semua Semester</span>
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                @if(!empty($periode->semester_syarat))
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="detail-icon" style="width: 40px; height: 40px; font-size: 1.2rem;">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1 text-light">Semester yang Diperbolehkan</h6>
+                                            <p class="mb-0">
+                                                <span class="badge bg-warning">Semester {{ $periode->semester_syarat }}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
+                                @endif
                             </div>
                         </div>
                     </div>

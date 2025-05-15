@@ -86,6 +86,15 @@ class AdminPengajuanNominalController extends Controller
             $oldStatus = $pengajuan->status_pengajuan;
             $oldNominal = $pengajuan->nominal_approved ?? 0;
             
+            // Debug log
+            \Illuminate\Support\Facades\Log::info('AdminPengajuanNominal: Updating nominal', [
+                'id_pengajuan' => $id,
+                'old_nominal' => $oldNominal,
+                'new_nominal' => $request->nominal_approved,
+                'old_status' => $oldStatus,
+                'new_status' => $request->status_pengajuan
+            ]);
+            
             // Jika sebelumnya diterima, kurangi total beasiswa mahasiswa
             if ($oldStatus === 'diterima' && $oldNominal > 0) {
                 $mahasiswa = $pengajuan->mahasiswa;
@@ -93,10 +102,24 @@ class AdminPengajuanNominalController extends Controller
                 $mahasiswa->save();
             }
             
-            // Update pengajuan
-            $pengajuan->nominal_approved = $request->nominal_approved;
-            $pengajuan->status_pengajuan = $request->status_pengajuan;
-            $pengajuan->save();
+            // Update pengajuan - force update langsung ke database
+            DB::table('pengajuan')
+                ->where('id_pengajuan', $id)
+                ->update([
+                    'nominal_approved' => $request->nominal_approved,
+                    'status_pengajuan' => $request->status_pengajuan,
+                    'updated_at' => now()
+                ]);
+            
+            // Reload the updated pengajuan
+            $pengajuan = Pengajuan::with('mahasiswa')->findOrFail($id);
+            
+            // Debug verify
+            \Illuminate\Support\Facades\Log::info('AdminPengajuanNominal: After update', [
+                'id_pengajuan' => $id,
+                'nominal_approved' => $pengajuan->nominal_approved,
+                'status_pengajuan' => $pengajuan->status_pengajuan
+            ]);
             
             // Jika sekarang diterima, tambahkan ke total beasiswa mahasiswa
             if ($request->status_pengajuan === 'diterima') {
@@ -112,6 +135,11 @@ class AdminPengajuanNominalController extends Controller
                 
         } catch (\Exception $e) {
             DB::rollBack();
+            \Illuminate\Support\Facades\Log::error('AdminPengajuanNominal: Error updating', [
+                'id_pengajuan' => $id,
+                'error' => $e->getMessage(),
+                'request' => $request->all()
+            ]);
             return redirect()->back()
                 ->with('error', 'Gagal memperbarui nominal beasiswa: ' . $e->getMessage());
         }
@@ -146,6 +174,14 @@ class AdminPengajuanNominalController extends Controller
             $oldStatus = $pengajuan->status_pengajuan;
             $oldNominal = $pengajuan->nominal_approved ?? 0;
             
+            // Debug log
+            \Illuminate\Support\Facades\Log::info('AdminPengajuanNominal: Setting default nominal', [
+                'id_pengajuan' => $id,
+                'old_nominal' => $oldNominal,
+                'new_nominal' => $beasiswa->nominal,
+                'old_status' => $oldStatus
+            ]);
+            
             // Jika sebelumnya diterima, kurangi total beasiswa mahasiswa
             if ($oldStatus === 'diterima' && $oldNominal > 0) {
                 $mahasiswa = $pengajuan->mahasiswa;
@@ -153,9 +189,23 @@ class AdminPengajuanNominalController extends Controller
                 $mahasiswa->save();
             }
             
-            // Set nominal default
-            $pengajuan->nominal_approved = $beasiswa->nominal;
-            $pengajuan->save();
+            // Set nominal default langsung ke database
+            DB::table('pengajuan')
+                ->where('id_pengajuan', $id)
+                ->update([
+                    'nominal_approved' => $beasiswa->nominal,
+                    'updated_at' => now()
+                ]);
+                
+            // Reload the updated pengajuan
+            $pengajuan = Pengajuan::with('mahasiswa')->findOrFail($id);
+            
+            // Debug verify
+            \Illuminate\Support\Facades\Log::info('AdminPengajuanNominal: After setting default', [
+                'id_pengajuan' => $id,
+                'nominal_approved' => $pengajuan->nominal_approved,
+                'status_pengajuan' => $pengajuan->status_pengajuan
+            ]);
             
             // Jika status diterima, tambahkan ke total beasiswa mahasiswa
             if ($pengajuan->status_pengajuan === 'diterima') {
@@ -171,6 +221,10 @@ class AdminPengajuanNominalController extends Controller
                 
         } catch (\Exception $e) {
             DB::rollBack();
+            \Illuminate\Support\Facades\Log::error('AdminPengajuanNominal: Error setting default', [
+                'id_pengajuan' => $id,
+                'error' => $e->getMessage()
+            ]);
             return redirect()->back()
                 ->with('error', 'Gagal mengatur nominal default: ' . $e->getMessage());
         }
