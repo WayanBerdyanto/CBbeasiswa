@@ -151,13 +151,19 @@
                             <h6 class="fw-bold mb-2">Nominal Beasiswa</h6>
                             <p class="mb-0">
                                 @if($pengajuan->nominal_approved)
-                                    Rp. {{ number_format($pengajuan->nominal_approved, 0, ',', '.') }}
-                                    @if($pengajuan->nominal_approved != $pengajuan->beasiswa->nominal)
-                                        <small class="text-light d-block">(Nominal disetujui oleh admin)</small>
-                                    @endif
+                                    <span class="badge bg-success py-2 px-3 fs-6 w-100 text-start">
+                                        <i class="fas fa-money-bill-wave me-2"></i>
+                                        Rp. {{ number_format($pengajuan->nominal_approved, 0, ',', '.') }}
+                                        @if($pengajuan->nominal_approved != $pengajuan->beasiswa->nominal)
+                                            <small class="d-block mt-1">(Nominal disetujui oleh admin)</small>
+                                        @endif
+                                    </span>
                                 @else
-                                    Rp. {{ number_format($pengajuan->beasiswa->nominal, 0, ',', '.') }}
-                                    <small class="text-light d-block">(Nominal default)</small>
+                                    <span class="badge bg-secondary py-2 px-3 fs-6 w-100 text-start">
+                                        <i class="fas fa-money-bill-wave me-2"></i>
+                                        Rp. {{ number_format($pengajuan->beasiswa->nominal, 0, ',', '.') }}
+                                        <small class="d-block mt-1">(Nominal default)</small>
+                                    </span>
                                 @endif
                             </p>
                         </div>

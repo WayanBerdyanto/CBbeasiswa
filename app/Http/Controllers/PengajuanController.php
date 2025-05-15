@@ -139,6 +139,15 @@ class PengajuanController extends Controller
             'ipk' => $request->ipk,
         ]);
         
+        // Log pengajuan yang dibuat
+        \Illuminate\Support\Facades\Log::info('Pengajuan: New application created', [
+            'id_pengajuan' => $pengajuan->id_pengajuan,
+            'id_beasiswa' => $pengajuan->id_beasiswa,
+            'beasiswa_nominal' => $beasiswa->nominal,
+            'nominal_approved' => $pengajuan->nominal_approved,
+            'status' => $pengajuan->status_pengajuan
+        ]);
+        
         // Upload and store document
         $file = $request->file('dokumen_file');
         $fileName = time() . '_' . $file->getClientOriginalName();
@@ -243,11 +252,23 @@ class PengajuanController extends Controller
     // Menampilkan detail pengajuan beasiswa
     public function detail($id)
     {
-        $pengajuan = Pengajuan::with(['beasiswa', 'mahasiswa', 'periode', 'dokumen'])
+        // Memastikan nominal_approved terload dengan benar
+        $pengajuan = Pengajuan::select([
+                'pengajuan.*',   // Seleksi semua kolom
+                'nominal_approved', // Pastikan kolom nominal_approved terload
+            ])
+            ->with(['beasiswa', 'mahasiswa', 'periode', 'dokumen'])
             ->where('id_pengajuan', $id)
             ->where('id_mahasiswa', Auth::guard('mahasiswa')->id())
             ->firstOrFail();
             
+        // Log untuk debugging
+        \Illuminate\Support\Facades\Log::info('Pengajuan: Detail viewed', [
+            'id_pengajuan' => $pengajuan->id_pengajuan,
+            'nominal_approved' => $pengajuan->nominal_approved,
+            'beasiswa_nominal' => $pengajuan->beasiswa->nominal
+        ]);
+        
         return view('beasiswa.detailPengajuan', compact('pengajuan'));
     }
 }

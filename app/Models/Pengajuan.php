@@ -49,4 +49,15 @@ class Pengajuan extends Model
     {
         return $this->hasMany(Dokumen::class, 'id_pengajuan', 'id_pengajuan');
     }
+    
+    // Accessor untuk memastikan nominal_approved selalu ada nilainya
+    public function getNominalApprovedAttribute($value)
+    {
+        // Jika nominal_approved masih null, gunakan nominal dari beasiswa
+        if (is_null($value) && $this->beasiswa) {
+            return $this->beasiswa->nominal;
+        }
+        
+        return $value;
+    }
 }
