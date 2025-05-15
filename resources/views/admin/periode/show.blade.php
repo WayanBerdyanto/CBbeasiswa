@@ -40,6 +40,28 @@
                                                 <td>{{ $periode->beasiswa->jenisBeasiswa ? $periode->beasiswa->jenisBeasiswa->nama_jenis : 'N/A' }}</td>
                                             </tr>
                                             <tr>
+                                                <th>Tipe Semester</th>
+                                                <td>
+                                                    @if($periode->tipe_semester == 'ganjil')
+                                                        <span class="badge bg-info">Semester Ganjil</span>
+                                                    @elseif($periode->tipe_semester == 'genap')
+                                                        <span class="badge bg-primary">Semester Genap</span>
+                                                    @else
+                                                        <span class="badge bg-secondary">Semua Semester</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Syarat Semester</th>
+                                                <td>
+                                                    @if(!empty($periode->semester_syarat))
+                                                        <span class="badge bg-warning">Semester {{ $periode->semester_syarat }}</span>
+                                                    @else
+                                                        <span class="text-light">Tidak ada syarat semester</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <th>Tanggal Mulai</th>
                                                 <td>{{ $periode->tanggal_mulai->format('d M Y') }}</td>
                                             </tr>

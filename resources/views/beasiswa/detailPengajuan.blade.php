@@ -110,8 +110,12 @@
                         
                         @if($pengajuan->status_pengajuan == 'diterima')
                         <div class="col-md-6 mb-3">
-                            <h6 class="fw-bold mb-2">Nominal Disetujui</h6>
-                            <p class="mb-0">Rp. {{ number_format($pengajuan->nominal_approved, 0, ',', '.') }}</p>
+                            <h6 class="fw-bold mb-2">Status Persetujuan</h6>
+                            <p class="mb-0">
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check-circle me-1"></i> Pengajuan Diterima
+                                </span>
+                            </p>
                         </div>
                         @endif
                     </div>
@@ -145,7 +149,17 @@
                         
                         <div class="col-md-6 mb-3">
                             <h6 class="fw-bold mb-2">Nominal Beasiswa</h6>
-                            <p class="mb-0">Rp. {{ number_format($pengajuan->beasiswa->nominal, 0, ',', '.') }}</p>
+                            <p class="mb-0">
+                                @if($pengajuan->nominal_approved)
+                                    Rp. {{ number_format($pengajuan->nominal_approved, 0, ',', '.') }}
+                                    @if($pengajuan->nominal_approved != $pengajuan->beasiswa->nominal)
+                                        <small class="text-light d-block">(Nominal disetujui oleh admin)</small>
+                                    @endif
+                                @else
+                                    Rp. {{ number_format($pengajuan->beasiswa->nominal, 0, ',', '.') }}
+                                    <small class="text-light d-block">(Nominal default)</small>
+                                @endif
+                            </p>
                         </div>
                         
                         @if($pengajuan->periode)

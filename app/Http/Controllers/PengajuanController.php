@@ -29,6 +29,37 @@ class PengajuanController extends Controller
         $periodeAktif = PeriodeBeasiswa::where('id_beasiswa', $id)
             ->where('status', 'aktif')
             ->first();
+            
+        // Validasi ketersediaan periode aktif
+        if (!$periodeAktif) {
+            return redirect()->route('beasiswa.index')
+                ->with('error', 'Beasiswa tidak sedang dalam periode pendaftaran aktif.');
+        }
+        
+        // Validasi tipe semester (ganjil/genap)
+        $semesterMahasiswa = (int)$user->semester;
+        $isGanjil = $semesterMahasiswa % 2 === 1; // Semester ganjil (1, 3, 5, 7)
+        
+        if ($periodeAktif->tipe_semester === 'ganjil' && !$isGanjil) {
+            return redirect()->route('beasiswa.index')
+                ->with('error', 'Beasiswa ini hanya tersedia untuk mahasiswa semester ganjil. Semester Anda saat ini adalah ' . $semesterMahasiswa . ' (semester genap).');
+        }
+        
+        if ($periodeAktif->tipe_semester === 'genap' && $isGanjil) {
+            return redirect()->route('beasiswa.index')
+                ->with('error', 'Beasiswa ini hanya tersedia untuk mahasiswa semester genap. Semester Anda saat ini adalah ' . $semesterMahasiswa . ' (semester ganjil).');
+        }
+        
+        // Validasi syarat semester tertentu
+        if (!empty($periodeAktif->semester_syarat)) {
+            $allowedSemesters = explode(',', $periodeAktif->semester_syarat);
+            $allowedSemesters = array_map('trim', $allowedSemesters);
+            
+            if (!in_array((string)$semesterMahasiswa, $allowedSemesters)) {
+                return redirect()->route('beasiswa.index')
+                    ->with('error', 'Beasiswa ini hanya tersedia untuk mahasiswa semester ' . $periodeAktif->semester_syarat . '. Semester Anda saat ini adalah ' . $semesterMahasiswa . '.');
+            }
+        }
 
         // Cek IPK minimal sebagai syarat
         $syaratIPK = Syarat::where('id_beasiswa', $id)->first();
@@ -56,6 +87,38 @@ class PengajuanController extends Controller
         $periode = PeriodeBeasiswa::where('id_beasiswa', $request->id_beasiswa)
             ->where('status', 'aktif')
             ->first();
+            
+        // Validasi periode aktif
+        if (!$periode) {
+            return redirect()->route('beasiswa.index')
+                ->with('error', 'Beasiswa tidak sedang dalam periode pendaftaran aktif.');
+        }
+        
+        // Validasi tipe semester & syarat semester
+        $user = Auth::guard('mahasiswa')->user();
+        $semesterMahasiswa = (int)$user->semester;
+        $isGanjil = $semesterMahasiswa % 2 === 1; // Semester ganjil (1, 3, 5, 7)
+        
+        if ($periode->tipe_semester === 'ganjil' && !$isGanjil) {
+            return redirect()->route('beasiswa.index')
+                ->with('error', 'Beasiswa ini hanya tersedia untuk mahasiswa semester ganjil.');
+        }
+        
+        if ($periode->tipe_semester === 'genap' && $isGanjil) {
+            return redirect()->route('beasiswa.index')
+                ->with('error', 'Beasiswa ini hanya tersedia untuk mahasiswa semester genap.');
+        }
+        
+        // Validasi syarat semester tertentu
+        if (!empty($periode->semester_syarat)) {
+            $allowedSemesters = explode(',', $periode->semester_syarat);
+            $allowedSemesters = array_map('trim', $allowedSemesters);
+            
+            if (!in_array((string)$semesterMahasiswa, $allowedSemesters)) {
+                return redirect()->route('beasiswa.index')
+                    ->with('error', 'Beasiswa ini hanya tersedia untuk mahasiswa semester ' . $periode->semester_syarat . '.');
+            }
+        }
         
         $syarat = Syarat::where('id_beasiswa', $request->id_beasiswa)->value('syarat_ipk');
         $beasiswa = Beasiswa::find($request->id_beasiswa);
@@ -151,6 +214,7 @@ class PengajuanController extends Controller
     {
         $pengajuan = Pengajuan::with(['beasiswa', 'dokumen'])
             ->where('id_mahasiswa', Auth::guard('mahasiswa')->id())
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return view('beasiswa.pengajuan', compact('pengajuan'));

@@ -15,7 +15,9 @@ class AdminPengajuanController extends Controller
 {
     public function index()
     {
-        $pengajuans = Pengajuan::with(['beasiswa.jenisBeasiswa', 'mahasiswa', 'periode'])->paginate(10);
+        $pengajuans = Pengajuan::with(['beasiswa.jenisBeasiswa', 'mahasiswa', 'periode'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
         return view('admin.pengajuan.index', compact('pengajuans'));
     }
 
