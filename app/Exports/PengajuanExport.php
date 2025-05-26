@@ -71,7 +71,7 @@ class PengajuanExport
         
         // Add header row with styling
         $sheet->row($row, [
-            'No.', 'Tanggal Pengajuan', 'NIM', 'Nama Mahasiswa', 'Beasiswa', 'Jenis Beasiswa', 'Status'
+            'No.', 'Tanggal Pengajuan', 'NIM', 'Nama Mahasiswa', 'Beasiswa', 'Jenis Beasiswa', 'Nominal', 'Status'
         ]);
 
         $sheet->row($row, function($rowStyle) {
@@ -103,22 +103,23 @@ class PengajuanExport
                 $pengajuan->mahasiswa ? $pengajuan->mahasiswa->nama : 'N/A',
                 $pengajuan->beasiswa ? $pengajuan->beasiswa->nama_beasiswa : 'N/A',
                 $pengajuan->beasiswa && $pengajuan->beasiswa->jenisBeasiswa ? $pengajuan->beasiswa->jenisBeasiswa->nama_jenis : 'N/A',
+                $pengajuan->nominal_approved ? 'Rp ' . number_format($pengajuan->nominal_approved, 0, ',', '.') : 'N/A',
                 $status
             ]);
             
             // Style status cells
             if ($status == 'Diterima') {
-                $sheet->cell('G' . $row, function($cell) {
+                $sheet->cell('H' . $row, function($cell) {
                     $cell->setBackground('#1cc88a');
                     $cell->setFontColor('#ffffff');
                 });
             } elseif ($status == 'Ditolak') {
-                $sheet->cell('G' . $row, function($cell) {
+                $sheet->cell('H' . $row, function($cell) {
                     $cell->setBackground('#e74a3b');
                     $cell->setFontColor('#ffffff');
                 });
             } else {
-                $sheet->cell('G' . $row, function($cell) {
+                $sheet->cell('H' . $row, function($cell) {
                     $cell->setBackground('#f6c23e');
                     $cell->setFontColor('#ffffff');
                 });
@@ -128,7 +129,7 @@ class PengajuanExport
         }
 
         // Style the title
-        $sheet->mergeCells('A1:G1');
+        $sheet->mergeCells('A1:H1');
         $sheet->cell('A1', function($cell) {
             $cell->setAlignment('center');
             $cell->setFontSize(16);
@@ -137,7 +138,7 @@ class PengajuanExport
         
         // Merge filter info cells
         for ($i = 2; $i <= 5; $i++) {
-            $sheet->mergeCells('A' . $i . ':G' . $i);
+            $sheet->mergeCells('A' . $i . ':H' . $i);
         }
         
         // Auto size columns

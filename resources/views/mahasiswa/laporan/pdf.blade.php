@@ -99,31 +99,35 @@
             <thead>
                 <tr>
                     <th>No.</th>
+                    <th>Tanggal</th>
+                    <th>NIM</th>
+                    <th>Nama Mahasiswa</th>
                     <th>Beasiswa</th>
-                    <th>Jenis</th>
-                    <th>Tanggal Pengajuan</th>
+                    <th>Jenis Beasiswa</th>
+                    <th>Nominal</th>
                     <th>Status</th>
-                    <th>Dokumen</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($pengajuanList as $index => $pengajuan)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $pengajuan->beasiswa->nama_beasiswa }}</td>
-                    <td>{{ $pengajuan->beasiswa->jenisBeasiswa->nama_jenis }}</td>
-                    <td>{{ $pengajuan->tgl_pengajuan->format('d/m/Y') }}</td>
-                    <td>
-                        @if($pengajuan->status_pengajuan == 'diterima')
-                            <span class="status-diterima">Diterima</span>
-                        @elseif($pengajuan->status_pengajuan == 'ditolak')
-                            <span class="status-ditolak">Ditolak</span>
-                        @else
-                            <span class="status-diproses">Diproses</span>
-                        @endif
-                    </td>
-                    <td>{{ $pengajuan->dokumen->count() }} dokumen</td>
-                </tr>
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $pengajuan->created_at->format('d/m/Y') }}</td>
+                        <td>{{ $pengajuan->mahasiswa ? $pengajuan->mahasiswa->nim : 'N/A' }}</td>
+                        <td>{{ $pengajuan->mahasiswa ? $pengajuan->mahasiswa->nama : 'N/A' }}</td>
+                        <td>{{ $pengajuan->beasiswa ? $pengajuan->beasiswa->nama_beasiswa : 'N/A' }}</td>
+                        <td>{{ $pengajuan->beasiswa && $pengajuan->beasiswa->jenisBeasiswa ? $pengajuan->beasiswa->jenisBeasiswa->nama_jenis : 'N/A' }}</td>
+                        <td>{{ $pengajuan->nominal_approved ? 'Rp ' . number_format($pengajuan->nominal_approved, 0, ',', '.') : 'N/A' }}</td>
+                        <td>
+                            @if($pengajuan->status_pengajuan == 'diterima')
+                                <span class="status-diterima">Diterima</span>
+                            @elseif($pengajuan->status_pengajuan == 'ditolak')
+                                <span class="status-ditolak">Ditolak</span>
+                            @else
+                                <span class="status-diproses">Diproses</span>
+                            @endif
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
