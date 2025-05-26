@@ -83,8 +83,14 @@
         <h2>Data Mahasiswa</h2>
         <p><strong>Nama:</strong> {{ $mahasiswa->nama }}</p>
         <p><strong>NIM:</strong> {{ $mahasiswa->nim }}</p>
-        <p><strong>Program Studi:</strong> {{ $mahasiswa->prodi }}</p>
+        <p><strong>Jurusan:</strong> {{ $mahasiswa->jurusan }}</p>
         <p><strong>Fakultas:</strong> {{ $mahasiswa->fakultas }}</p>
+        <p><strong>Angkatan:</strong> {{ $mahasiswa->angkatan }}</p>
+        <p><strong>Semester:</strong> {{ $mahasiswa->semester }}</p>
+        <p><strong>IPK:</strong> {{ $mahasiswa->ipk_terakhir }}</p>
+        <p><strong>Email:</strong> {{ $mahasiswa->email }}</p>
+        <p><strong>No. HP:</strong> {{ $mahasiswa->no_hp }}</p>
+        <p><strong>Alamat:</strong> {{ $mahasiswa->alamat }}</p>
     </div>
     
     <div class="summary">
