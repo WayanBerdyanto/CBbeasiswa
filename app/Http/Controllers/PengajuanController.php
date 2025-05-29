@@ -219,14 +219,33 @@ class PengajuanController extends Controller
     }
 
     // Menampilkan daftar pengajuan beasiswa milik user yang login
-    public function daftar()
+    public function daftar(Request $request)
     {
-        $pengajuan = Pengajuan::with(['beasiswa', 'dokumen'])
-            ->where('id_mahasiswa', Auth::guard('mahasiswa')->id())
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $query = Pengajuan::with(['beasiswa', 'dokumen'])
+            ->where('id_mahasiswa', Auth::guard('mahasiswa')->id());
 
-        return view('beasiswa.pengajuan', compact('pengajuan'));
+        // Filter by status
+        if ($request->has('status') && $request->status != 'semua') {
+            $query->where('status_pengajuan', $request->status);
+        }
+
+        // Filter by date range
+        if ($request->has('tanggal_mulai') && $request->has('tanggal_akhir')) {
+            $query->whereBetween('tgl_pengajuan', [
+                $request->tanggal_mulai,
+                $request->tanggal_akhir . ' 23:59:59'
+            ]);
+        }
+
+        // Filter by beasiswa
+        if ($request->has('beasiswa') && $request->beasiswa != 'semua') {
+            $query->where('id_beasiswa', $request->beasiswa);
+        }
+
+        $pengajuan = $query->orderBy('created_at', 'desc')->get();
+        $beasiswas = Beasiswa::all(); // For filter dropdown
+
+        return view('beasiswa.pengajuan', compact('pengajuan', 'beasiswas'));
     }
 
     // Menghapus pengajuan yang telah dibuat
@@ -270,5 +289,89 @@ class PengajuanController extends Controller
         ]);
         
         return view('beasiswa.detailPengajuan', compact('pengajuan'));
+    }
+
+    public function export(Request $request)
+    {
+        $query = Pengajuan::with(['beasiswa', 'dokumen', 'mahasiswa'])
+            ->where('id_mahasiswa', Auth::guard('mahasiswa')->id());
+
+        // Apply filters to export
+        if ($request->has('status') && $request->status != 'semua') {
+            $query->where('status_pengajuan', $request->status);
+        }
+
+        if ($request->has('tanggal_mulai') && $request->has('tanggal_akhir')) {
+            $query->whereBetween('tgl_pengajuan', [
+                $request->tanggal_mulai,
+                $request->tanggal_akhir . ' 23:59:59'
+            ]);
+        }
+
+        if ($request->has('beasiswa') && $request->beasiswa != 'semua') {
+            $query->where('id_beasiswa', $request->beasiswa);
+        }
+
+        $pengajuan = $query->orderBy('created_at', 'desc')->get();
+
+        // Generate CSV
+        $filename = 'pengajuan_beasiswa_' . date('Y-m-d_His') . '.csv';
+        $headers = [
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+
+        $handle = fopen('php://output', 'w');
+        fputcsv($handle, [
+            'Beasiswa',
+            'Tanggal Pengajuan',
+            'Status',
+            'Nominal',
+            'IPK',
+            'Alasan Pengajuan'
+        ]);
+
+        foreach ($pengajuan as $item) {
+            fputcsv($handle, [
+                $item->beasiswa->nama_beasiswa,
+                $item->tgl_pengajuan,
+                ucfirst($item->status_pengajuan),
+                $item->nominal_approved,
+                $item->ipk,
+                $item->alasan_pengajuan
+            ]);
+        }
+
+        fclose($handle);
+        return response()->stream(function() use ($pengajuan) {
+            $handle = fopen('php://output', 'w');
+            
+            // Add headers
+            fputcsv($handle, [
+                'Beasiswa',
+                'Tanggal Pengajuan',
+                'Status',
+                'Nominal',
+                'IPK',
+                'Alasan Pengajuan'
+            ]);
+            
+            // Add data
+            foreach ($pengajuan as $item) {
+                fputcsv($handle, [
+                    $item->beasiswa->nama_beasiswa,
+                    $item->tgl_pengajuan,
+                    ucfirst($item->status_pengajuan),
+                    $item->nominal_approved,
+                    $item->ipk,
+                    $item->alasan_pengajuan
+                ]);
+            }
+            
+            fclose($handle);
+        }, 200, $headers);
     }
 }

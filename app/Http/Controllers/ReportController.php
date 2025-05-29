@@ -16,22 +16,22 @@ class ReportController extends Controller
     {
         // Get the authenticated student user
         $mahasiswa = Auth::guard('mahasiswa')->user();
-        
+
         if (!$mahasiswa) {
             return redirect()->route('login')->with('error', 'Anda harus login terlebih dahulu');
         }
-        
+
         // Summary statistics
         $stats = [
             'total_pengajuan' => Pengajuan::where('id_mahasiswa', $mahasiswa->id)->count(),
             'pengajuan_diterima' => Pengajuan::where('id_mahasiswa', $mahasiswa->id)
-                                    ->where('status_pengajuan', 'diterima')->count(),
+                ->where('status_pengajuan', 'diterima')->count(),
             'pengajuan_ditolak' => Pengajuan::where('id_mahasiswa', $mahasiswa->id)
-                                  ->where('status_pengajuan', 'ditolak')->count(),
+                ->where('status_pengajuan', 'ditolak')->count(),
             'pengajuan_diproses' => Pengajuan::where('id_mahasiswa', $mahasiswa->id)
-                                   ->where('status_pengajuan', 'diproses')->count(),
+                ->where('status_pengajuan', 'diproses')->count(),
         ];
-        
+
         // Get all the student's applications by scholarship type
         $pengajuanByJenis = DB::table('pengajuan')
             ->join('beasiswa', 'pengajuan.id_beasiswa', '=', 'beasiswa.id_beasiswa')
@@ -46,27 +46,27 @@ class ReportController extends Controller
             )
             ->groupBy('jenis_beasiswa.id_jenis', 'jenis_beasiswa.nama_jenis')
             ->get();
-        
+
         // Recent applications with details
         $pengajuanList = Pengajuan::with(['beasiswa', 'beasiswa.jenisBeasiswa', 'dokumen'])
             ->where('id_mahasiswa', $mahasiswa->id)
             ->orderBy('created_at', 'desc')
             ->get();
-        
+
         // Get months for application statistics
         $today = now();
         $months = [];
-        
+
         for ($i = 5; $i >= 0; $i--) {
             $month = $today->copy()->subMonths($i);
             $months[$month->format('M Y')] = $month->format('Y-m');
         }
-        
+
         // Monthly application statistics
         $monthlyStats = [];
         foreach ($months as $label => $yearMonth) {
             list($year, $month) = explode('-', $yearMonth);
-            
+
             $monthlyStats[$label] = [
                 'total' => Pengajuan::where('id_mahasiswa', $mahasiswa->id)
                     ->whereYear('created_at', $year)
@@ -89,44 +89,63 @@ class ReportController extends Controller
                     ->count(),
             ];
         }
-        
+
         return view('mahasiswa.laporan.index', compact(
-            'mahasiswa', 
-            'stats', 
+            'mahasiswa',
+            'stats',
             'pengajuanByJenis',
             'pengajuanList',
             'months',
             'monthlyStats'
         ));
     }
-    
+
     public function exportPdf($download = true)
     {
+
         $mahasiswa = Auth::guard('mahasiswa')->user();
-        
+
         if (!$mahasiswa) {
             return redirect()->route('login')->with('error', 'Anda harus login terlebih dahulu');
         }
-        
-        // Get all applications for this student
-        $pengajuanList = Pengajuan::with(['beasiswa', 'beasiswa.jenisBeasiswa', 'dokumen'])
+
+        // Get all applications for this student with complete relationships
+        $pengajuanList = Pengajuan::with([
+            'beasiswa',
+            'beasiswa.jenisBeasiswa',
+            'dokumen',
+            'periode'
+        ])
             ->where('id_mahasiswa', $mahasiswa->id)
             ->orderBy('created_at', 'desc')
             ->get();
-        
+
+        // Count statistics
+        $stats = [
+            'total' => $pengajuanList->count(),
+            'diterima' => $pengajuanList->where('status_pengajuan', 'diterima')->count(),
+            'ditolak' => $pengajuanList->where('status_pengajuan', 'ditolak')->count(),
+            'diproses' => $pengajuanList->where('status_pengajuan', 'diproses')->count(),
+        ];
+
         // Prepare data for PDF
         $data = [
             'title' => 'Laporan Pengajuan Beasiswa',
             'date' => date('d/m/Y H:i:s'),
             'mahasiswa' => $mahasiswa,
             'pengajuanList' => $pengajuanList,
-            'count' => $pengajuanList->count(),
+            'count' => $stats['total'],
+            'stats' => $stats,
+            'isAdmin' => false
         ];
-        
-        // Generate PDF
+
+        // Generate PDF with custom paper size and orientation
         $pdf = PDF::loadView('mahasiswa.laporan.pdf', $data);
-        $filename = 'laporan_beasiswa_' . $mahasiswa->nim . '_' . date('d-m-Y') . '.pdf';
-        
+        $pdf->setPaper('a4', 'portrait');
+
+        // Set filename with student's NIM and timestamp
+        $filename = 'laporan_beasiswa_' . $mahasiswa->nim . '_' . date('d-m-Y_His') . '.pdf';
+
         // Return based on whether to download or stream
         if ($download === 'view' || $download === false) {
             return $pdf->stream($filename);
@@ -134,7 +153,7 @@ class ReportController extends Controller
             return $pdf->download($filename);
         }
     }
-    
+
     /**
      * View PDF in browser instead of downloading
      */
@@ -142,26 +161,26 @@ class ReportController extends Controller
     {
         return $this->exportPdf('view');
     }
-    
+
     public function detailPengajuan($id)
     {
         $mahasiswa = Auth::guard('mahasiswa')->user();
-        
+
         if (!$mahasiswa) {
             return redirect()->route('login')->with('error', 'Anda harus login terlebih dahulu');
         }
-        
+
         // Get the specific application with all needed relationships
         $pengajuan = Pengajuan::with([
-            'beasiswa', 
-            'beasiswa.jenisBeasiswa', 
+            'beasiswa',
+            'beasiswa.jenisBeasiswa',
             'dokumen',
             'periode'
         ])
             ->where('id_mahasiswa', $mahasiswa->id)
             ->where('id_pengajuan', $id)
             ->firstOrFail();
-        
+
         return view('mahasiswa.laporan.detail', compact('pengajuan', 'mahasiswa'));
     }
 }
