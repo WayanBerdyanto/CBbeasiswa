@@ -110,7 +110,8 @@
                     <th>Nama Mahasiswa</th>
                     <th>Beasiswa</th>
                     <th>Jenis Beasiswa</th>
-                    <th>Nominal</th>
+                    <th>Nominal Beasiswa</th>
+                    <th>Nominal DiApproved</th>
                     <th>Status</th>
                 </tr>
             </thead>
@@ -123,7 +124,8 @@
                         <td>{{ $pengajuan->mahasiswa ? $pengajuan->mahasiswa->nama : 'N/A' }}</td>
                         <td>{{ $pengajuan->beasiswa ? $pengajuan->beasiswa->nama_beasiswa : 'N/A' }}</td>
                         <td>{{ $pengajuan->beasiswa && $pengajuan->beasiswa->jenisBeasiswa ? $pengajuan->beasiswa->jenisBeasiswa->nama_jenis : 'N/A' }}</td>
-                        <td>{{ $pengajuan->nominal_approved ? 'Rp ' . number_format($pengajuan->nominal_approved, 0, ',', '.') : 'N/A' }}</td>
+                        <td>{{ $pengajuan->beasiswa->nominal ? 'Rp ' . number_format($pengajuan->beasiswa->nominal, 0, ',', '.') : '-' }}</td>
+                        <td>{{ $pengajuan->nominal_approved ? 'Rp ' . number_format($pengajuan->nominal_approved, 0, ',', '.') : '-' }}</td>
                         <td>
                             @if($pengajuan->status_pengajuan == 'diterima')
                                 <span class="status-diterima">Diterima</span>

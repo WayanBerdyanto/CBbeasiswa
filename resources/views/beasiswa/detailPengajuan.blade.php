@@ -213,13 +213,18 @@
                                         </div>
                                         <div>
                                             <div class="btn-group">
-                                                <a href="{{ route('dokumen.show', $dokumen->id_dokumen) }}" 
-                                                   class="btn btn-sm btn-primary rounded-start">
-                                                    <i class="fas fa-eye me-1"></i> Lihat
-                                                </a>
-                                                <a href="{{ route('dokumen.download', $dokumen->id_dokumen) }}" 
+                                                {{-- <a href="{{ route('dokumen.view', $dokumen->id_dokumen) }}" 
+                                                   class="btn btn-sm btn-primary rounded-start"
+                                                   target="_blank">
+                                                    <i class="fas fa-file-pdf me-1"></i> PDF
+                                                </a> --}}
+                                                {{-- <a href="{{ route('dokumen.show', $dokumen->id_dokumen) }}" 
                                                    class="btn btn-sm btn-info">
-                                                    <i class="fas fa-download"></i>
+                                                    <i class="fas fa-eye me-1"></i> Preview
+                                                </a> --}}
+                                                <a href="{{ route('dokumen.download', $dokumen->id_dokumen) }}" 
+                                                   class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-download me-1"></i> Download
                                                 </a>
                                                 @if($pengajuan->status_pengajuan == 'diproses')
                                                 <a href="{{ route('dokumen.edit', $dokumen->id_dokumen) }}?redirect_to_detail=1" 

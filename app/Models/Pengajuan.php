@@ -13,6 +13,7 @@ class Pengajuan extends Model
     protected $primaryKey = 'id_pengajuan';
     protected $casts = [
         'tgl_pengajuan' => 'datetime',
+        'nominal_approved' => 'decimal:0',
     ];
     
     protected $fillable = [
@@ -50,14 +51,21 @@ class Pengajuan extends Model
         return $this->hasMany(Dokumen::class, 'id_pengajuan', 'id_pengajuan');
     }
     
-    // Accessor untuk memastikan nominal_approved selalu ada nilainya
+    // Accessor untuk mendapatkan nominal yang akan ditampilkan
+    public function getNominalDisplayAttribute()
+    {
+        if ($this->status_pengajuan === 'diterima') {
+            return $this->nominal_approved ?: $this->beasiswa->nominal;
+        }
+        return $this->beasiswa->nominal;
+    }
+
+    // Accessor untuk memastikan nominal_approved selalu ada nilainya jika status diterima
     public function getNominalApprovedAttribute($value)
     {
-        // Jika nominal_approved masih null, gunakan nominal dari beasiswa
-        if (is_null($value) && $this->beasiswa) {
-            return $this->beasiswa->nominal;
+        if ($this->status_pengajuan === 'diterima') {
+            return $value ?: $this->beasiswa->nominal;
         }
-        
         return $value;
     }
 }

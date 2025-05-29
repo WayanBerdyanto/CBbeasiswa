@@ -197,3 +197,8 @@ Route::middleware(['auth:admin'])->group(function () {
     // admin logout
     Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 });
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('dokumen/{id}/pdf', [DokumenController::class, 'generatePdf'])->name('dokumen.pdf');
+    Route::get('dokumen/{id}/view', [DokumenController::class, 'pdf'])->name('dokumen.view');
+});
