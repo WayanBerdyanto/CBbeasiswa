@@ -248,6 +248,8 @@ class PengajuanController extends Controller
         return view('beasiswa.pengajuan', compact('pengajuan', 'beasiswas'));
     }
 
+    // Menampilkan form pengajuan beasiswa
+
     // Menghapus pengajuan yang telah dibuat
     public function hapus($id)
     {
